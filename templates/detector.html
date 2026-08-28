@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block title %}Fake Job Detector | JobShield AI{% endblock %}
+{% block content %}
+<div class="container-xl py-5 detector-page">
+  <div class="detector-hero mb-4">
+    <div>
+      <div class="eyebrow"><i class="bi bi-shield-check"></i> JOB SAFETY SCANNER</div>
+      <h2 class="section-title mb-1">Is this job worth trusting?</h2>
+      <p class="section-sub mb-0">Scan the job description, source URL and recruiter details together for a clearer risk picture.</p>
+    </div>
+    <div class="scan-trust"><i class="bi bi-lock-fill"></i> Your scan stays private</div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <!-- Job content -->
+      <div class="card-surface p-4 detector-card">
+        <div class="section-kicker"><span class="step-number">01</span><div><h5 class="mb-0">Job details</h5><p class="small text-muted mb-0">Start with the content you received.</p></div></div>
+        <div class="tab-pill-group mb-3" data-tab-group="detectInput">
+          <button class="tab-pill active" data-tab-target="paste">Paste Job Description</button>
+          <button class="tab-pill" data-tab-target="upload">Upload File</button>
+        </div>
+
+        <div data-tab-panel="detectInput" data-panel-name="paste">
+          <textarea id="jobDescription" class="jd-textarea" maxlength="5000" data-max="5000" data-counter="jdCounter" placeholder="Paste the complete job description here… Include company name, role, salary, contact details and any instructions."></textarea>
+          <div class="char-count" id="jdCounter">0 / 5000</div>
+        </div>
+        <div data-tab-panel="detectInput" data-panel-name="upload" style="display:none;">
+          <div class="upload-zone" id="uploadZoneJob" data-input="jobFileInput">
+            <div class="upload-icon"><i class="bi bi-cloud-arrow-up"></i></div>
+            <p class="mb-1 fw-semibold">Drag & drop your file here</p>
+            <p class="text-muted small mb-0">or click to browse — image, PDF, DOCX (Max 5MB)</p>
+          </div>
+          <input type="file" id="jobFileInput" accept="image/*,.pdf,.doc,.docx" hidden data-preview="jobFilePreview" data-zone="uploadZoneJob" data-filename="jobFileName" data-change-btn="jobChangeBtn">
+          <div id="jobFilePreview" class="mt-3" style="display:none;"></div>
+          <div class="d-flex justify-content-between align-items-center mt-2"><span class="text-muted small" id="jobFileName"></span><button class="btn-outline-teal btn-sm py-1" id="jobChangeBtn" style="display:none;" data-remove-upload="jobFileInput"><i class="bi bi-arrow-repeat"></i> Upload different file</button></div>
+        </div>
+      </div>
+
+      <!-- Source verification -->
+      <div class="card-surface p-4 mt-4 detector-card">
+        <div class="section-kicker"><span class="step-number">02</span><div><h5 class="mb-0">Verify the source</h5><p class="small text-muted mb-0">Optional details make the scan more useful.</p></div></div>
+        <div class="row g-3">
+          <div class="col-12">
+            <label class="form-label small fw-semibold"><i class="bi bi-link-45deg me-1"></i>Job URL</label>
+            <div class="input-with-icon"><i class="bi bi-globe2"></i><input id="jobUrl" class="form-control" type="url" placeholder="https://linkedin.com/jobs/... or https://company.com/careers/..." maxlength="1000"></div>
+            <div class="form-hint">LinkedIn or company career URL. We check the URL format and domain; we do not claim a site is genuine just because it opens.</div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label small fw-semibold"><i class="bi bi-envelope me-1"></i>Recruiter email</label>
+            <input id="recruiterEmail" class="form-control" type="email" placeholder="recruiter@company.com" maxlength="255">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label small fw-semibold"><i class="bi bi-building me-1"></i>Company website</label>
+            <input id="companyWebsite" class="form-control" type="url" placeholder="https://company.com" maxlength="1000">
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick red flags -->
+      <div class="card-surface p-4 mt-4 detector-card">
+        <div class="section-kicker"><span class="step-number">03</span><div><h5 class="mb-0">Quick red-flag questions</h5><p class="small text-muted mb-0">Tell us what happened outside the job post.</p></div></div>
+        <div class="row g-3">
+          <div class="col-md-6"><div class="risk-question"><div><strong>Payment requested?</strong><small>Fee, deposit, equipment or verification charge</small></div><div class="segmented" data-question="payment"><button type="button" data-value="yes">Yes</button><button type="button" data-value="no">No</button><button type="button" class="active" data-value="not_sure">Not sure</button></div></div></div>
+          <div class="col-md-6"><div class="risk-question"><div><strong>WhatsApp/chat-only interview?</strong><small>No proper call or formal interview process</small></div><div class="segmented" data-question="whatsapp_only"><button type="button" data-value="yes">Yes</button><button type="button" data-value="no">No</button><button type="button" class="active" data-value="not_sure">Not sure</button></div></div></div>
+          <div class="col-md-6"><div class="risk-question"><div><strong>Unrealistic salary?</strong><small>Pay seems far above the role's normal range</small></div><div class="segmented" data-question="unrealistic_salary"><button type="button" data-value="yes">Yes</button><button type="button" data-value="no">No</button><button type="button" class="active" data-value="not_sure">Not sure</button></div></div></div>
+          <div class="col-md-6"><div class="risk-question"><div><strong>Official company email?</strong><small>Did the offer come from the company domain?</small></div><div class="segmented" data-question="official_email"><button type="button" data-value="yes">Yes</button><button type="button" data-value="no">No</button><button type="button" class="active" data-value="not_sure">Not sure</button></div></div></div>
+          <div class="col-12"><div class="risk-question"><div><strong>Can you verify the company independently?</strong><small>Check the official website, careers page and contact details yourself.</small></div><div class="segmented" data-question="verify_company"><button type="button" data-value="yes">Yes</button><button type="button" data-value="no">No</button><button type="button" class="active" data-value="not_sure">Not sure</button></div></div></div>
+        </div>
+      </div>
+
+      <button class="btn-teal w-100 justify-content-center mt-4 scan-button" id="analyzeBtn"><i class="bi bi-stars"></i> Scan for Job Risk</button>
+    </div>
+
+    <div class="col-lg-5">
+      <!-- Scan progress -->
+      <div class="card-surface p-4 scan-progress-card" id="scanProgress" style="display:none;">
+        <div class="d-flex justify-content-between align-items-center mb-3"><div><h5 class="mb-1">AI safety scan</h5><p class="text-muted small mb-0" id="scanProgressLabel">Preparing checks…</p></div><span class="scan-percent" id="scanPercent">0%</span></div>
+        <div class="scan-line"><div id="scanProgressBar"></div></div>
+        <div class="scan-steps mt-4">
+          <div class="scan-step active" data-scan-step="1"><span><i class="bi bi-file-text"></i></span><div><strong>Reading job content</strong><small>Looking for suspicious wording and claims</small></div></div>
+          <div class="scan-step" data-scan-step="2"><span><i class="bi bi-link-45deg"></i></span><div><strong>Checking source signals</strong><small>Comparing URL and recruiter-domain clues</small></div></div>
+          <div class="scan-step" data-scan-step="3"><span><i class="bi bi-shield-exclamation"></i></span><div><strong>Scoring risk</strong><small>Combining model + safety rules</small></div></div>
+          <div class="scan-step" data-scan-step="4"><span><i class="bi bi-lightbulb"></i></span><div><strong>Preparing guidance</strong><small>Turning signals into next steps</small></div></div>
+        </div>
+      </div>
+
+      <div class="card-surface p-4 mb-4" id="resultEmpty">
+        <h5 class="mb-3">Analysis Result</h5>
+        <div class="result-placeholder"><div class="circle-icon"><i class="bi bi-shield-question"></i></div><div class="fw-semibold">Ready to scan</div><div class="text-muted small">Add a job description and any source details, then run the safety scan.</div></div>
+      </div>
+
+      <!-- Result -->
+      <div class="verdict-card mb-4" id="resultCard" style="display:none;">
+        <div class="result-top">
+          <div class="risk-gauge" id="riskGauge"><i class="bi bi-shield-exclamation"></i><strong id="riskScoreLarge">--</strong><small>risk score</small></div>
+          <div class="result-summary">
+            <div class="d-flex align-items-center justify-content-between gap-2"><span class="risk-level-label">RISK LEVEL</span><span class="verdict-badge fake" id="verdictBadge"><i class="bi bi-exclamation-triangle-fill"></i> <span id="riskLevel">High</span></span></div>
+            <h4 id="verdictText" class="mt-2 mb-1">Likely fake</h4>
+            <div class="small text-muted">Confidence signal from your content and safety checks</div>
+            <div class="mt-3 d-flex justify-content-between"><span class="small text-muted">Risk score</span><strong class="small" id="riskScore">--%</strong></div>
+            <div class="progress-wrap"><div class="progress-fill risk" id="riskProgress" style="width:0%"></div></div>
+          </div>
+        </div>
+
+        <div class="result-section">
+          <div class="result-section-title"><i class="bi bi-search"></i><span>Why this result?</span></div>
+          <div id="riskFlags"></div><div id="positiveSignals" class="mt-1"></div><div id="sourceChecks" class="mt-2"></div>
+        </div>
+
+        <div class="result-section next-steps">
+          <div class="result-section-title"><i class="bi bi-shield-check"></i><span>What to do next</span></div>
+          <div id="nextActions"></div>
+        </div>
+
+        <div class="result-footer">
+          <div class="small text-muted"><i class="bi bi-cpu me-1"></i><span id="modelInfo">Explainable local model</span></div>
+          {% if current_user.is_authenticated %}
+          <button class="btn-outline-teal btn-sm" id="saveReportBtn"><i class="bi bi-bookmark"></i> Save to History</button>
+          {% else %}
+          <a class="btn-outline-teal btn-sm" href="{{ url_for('auth.login') }}"><i class="bi bi-person-lock"></i> Login to Save</a>
+          {% endif %}
+          <button class="btn-outline-teal btn-sm" id="downloadReportBtn"><i class="bi bi-download"></i> Download Report</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-surface p-4 mt-4">
+    <div class="d-flex align-items-start justify-content-between gap-3 flex-wrap mb-3"><div><h6 class="mb-1">What JobShield checks</h6><p class="small text-muted mb-0">A transparent baseline model trained on {{ training_examples }} labelled examples plus high-priority safety rules.</p></div><span class="badge-soft"><i class="bi bi-eye"></i> Explainable result</span></div>
+    <div class="row g-3 checklist-card"><div class="col-md-4"><ul><li><i class="bi bi-check-circle-fill"></i> Suspicious phrases</li><li><i class="bi bi-check-circle-fill"></i> Payment requests</li></ul></div><div class="col-md-4"><ul><li><i class="bi bi-check-circle-fill"></i> Source & email signals</li><li><i class="bi bi-check-circle-fill"></i> Interview red flags</li></ul></div><div class="col-md-4"><ul><li><i class="bi bi-check-circle-fill"></i> Salary & claim patterns</li><li><i class="bi bi-check-circle-fill"></i> Actionable safety guidance</li></ul></div></div>
+  </div>
+</div>
+{% endblock %}

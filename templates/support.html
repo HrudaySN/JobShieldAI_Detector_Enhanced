@@ -1,0 +1,273 @@
+{% extends "base.html" %}
+{% block title %}About, Help & Contact | JobShield AI{% endblock %}
+{% block content %}
+<div class="container-xl py-5">
+
+  <div class="mb-4 text-center text-lg-start">
+    <h2 class="section-title mb-1">About, Help & Contact</h2>
+    <p class="section-sub mb-0">Learn about JobShield AI, find answers to common questions, or reach our team.</p>
+  </div>
+
+  <div class="d-flex justify-content-center justify-content-lg-start mb-4">
+    <div class="tab-pill-group flex-wrap" data-tab-group="support">
+      <button class="tab-pill active" data-tab-target="about"><i class="bi bi-people me-1"></i>About Us</button>
+      <button class="tab-pill" data-tab-target="help"><i class="bi bi-patch-question me-1"></i>Help / FAQ</button>
+      <button class="tab-pill" data-tab-target="contact"><i class="bi bi-envelope me-1"></i>Contact Us</button>
+    </div>
+  </div>
+
+  <!-- ===================== ABOUT ===================== -->
+  <div data-tab-panel="support" data-panel-name="about">
+
+    <div class="row g-5 align-items-center mb-5">
+      <div class="col-lg-6">
+        <h4 class="mb-3">Who we are</h4>
+        <p class="text-muted">JobShield AI is an intelligent platform built to protect job seekers from job scams and help recruiters find the right talent efficiently using artificial intelligence.</p>
+        <p class="text-muted mb-0">Our mission is to create a safer and smarter hiring ecosystem where technology works for trust, transparency, and better opportunities for everyone.</p>
+      </div>
+      <div class="col-lg-6 text-center">
+        <svg viewBox="0 0 400 260" style="max-width:340px;width:100%;">
+          <circle cx="120" cy="90" r="38" fill="var(--teal-100)"/>
+          <circle cx="120" cy="70" r="22" fill="var(--teal-600)"/>
+          <rect x="88" y="95" width="64" height="55" rx="20" fill="var(--teal-600)"/>
+          <circle cx="220" cy="80" r="38" fill="var(--teal-50)"/>
+          <circle cx="220" cy="60" r="22" fill="var(--teal-700)"/>
+          <rect x="188" y="85" width="64" height="55" rx="20" fill="var(--teal-700)"/>
+          <circle cx="300" cy="95" r="38" fill="var(--teal-100)"/>
+          <circle cx="300" cy="75" r="22" fill="var(--teal-500)"/>
+          <rect x="268" y="100" width="64" height="55" rx="20" fill="var(--teal-500)"/>
+          <path d="M170 200 L200 150 L230 200 Z" fill="var(--teal-800)"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+      <div class="col-md-4">
+        <div class="value-card">
+          <div class="icon-wrap"><i class="bi bi-bullseye"></i></div>
+          <h5>Our Mission</h5>
+          <p class="text-muted small">To empower job seekers by detecting fake job postings and helping them make informed career decisions.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="value-card">
+          <div class="icon-wrap"><i class="bi bi-eye"></i></div>
+          <h5>Our Vision</h5>
+          <p class="text-muted small">To build a world where every job opportunity is genuine and every resume finds the right match.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="value-card">
+          <div class="icon-wrap"><i class="bi bi-gem"></i></div>
+          <h5>Our Values</h5>
+          <p class="text-muted small mb-0">
+            <i class="bi bi-check2 me-1" style="color:var(--teal-600)"></i>Integrity<br>
+            <i class="bi bi-check2 me-1" style="color:var(--teal-600)"></i>Transparency<br>
+            <i class="bi bi-check2 me-1" style="color:var(--teal-600)"></i>Innovation<br>
+            <i class="bi bi-check2 me-1" style="color:var(--teal-600)"></i>User First
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-strip">
+      <div class="row g-0">
+        <div class="col-6 col-lg-3 stat-item">
+          <div class="stat-icon"><i class="bi bi-briefcase"></i></div>
+          <div><div class="stat-num">24</div><div class="stat-label">Labelled starter records</div></div>
+        </div>
+        <div class="col-6 col-lg-3 stat-item">
+          <div class="stat-icon"><i class="bi bi-shield-x"></i></div>
+          <div><div class="stat-num">14</div><div class="stat-label">High-risk signals checked</div></div>
+        </div>
+        <div class="col-6 col-lg-3 stat-item">
+          <div class="stat-icon"><i class="bi bi-file-earmark-person"></i></div>
+          <div><div class="stat-num">100%</div><div class="stat-label">Local, explainable analysis</div></div>
+        </div>
+        <div class="col-6 col-lg-3 stat-item">
+          <div class="stat-icon"><i class="bi bi-graph-up-arrow"></i></div>
+          <div><div class="stat-num">0</div><div class="stat-label">Data shared with third parties</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== HELP / FAQ ===================== -->
+  <div data-tab-panel="support" data-panel-name="help" style="display:none;">
+    <div class="row g-4">
+      <div class="col-lg-3">
+        <div class="card-surface p-3 help-sidebar">
+          <div class="list-group list-group-flush">
+            <div class="list-group-item active">Getting Started</div>
+            <div class="list-group-item">Fake Job Detector</div>
+            <div class="list-group-item">AI Resume Screening</div>
+            <div class="list-group-item">Dashboard & History</div>
+            <div class="list-group-item">Account & Security</div>
+            <div class="list-group-item">General Questions</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-9">
+        <div class="accordion" id="faqAccordion">
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                How does the Fake Job Detector work?
+              </button>
+            </h2>
+            <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">Our AI model analyzes the job description text and/or uploaded file for suspicious keywords, unrealistic salary claims, company authenticity signals, contact details, and grammar quality to predict how likely a posting is to be fake.</div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                What kind of job scams can be detected?
+              </button>
+            </h2>
+            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">We flag common patterns such as upfront payment/deposit requests, work-from-home data entry scams, fake recruiter chat-only interviews, unrealistic pay-for-effort offers, and impersonation of well-known companies.</div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                How accurate is the AI analysis?
+              </button>
+            </h2>
+            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">This project currently uses a small, explainable baseline trained on the included labelled starter dataset. Its score is a risk indicator, not a guarantee; every result shows the matched signals so you can make the final call and verify the company independently.</div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                Is my data safe and secure?
+              </button>
+            </h2>
+            <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">Yes — uploaded files and pasted text are only used to generate your analysis and are never shared with third parties.</div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                What file formats are supported for resumes?
+              </button>
+            </h2>
+            <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">You can upload PDF, DOCX, or clear image files (JPG/PNG) of your resume, up to 5MB.</div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
+                How is the resume match score calculated?
+              </button>
+            </h2>
+            <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">We extract your skills and experience and compare them against role requirements to produce a percentage match, along with skill gap suggestions.</div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq7">
+                Can I download my analysis report?
+              </button>
+            </h2>
+            <div id="faq7" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">Report downloads are coming soon — for now you can revisit any past analysis from your History page.</div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="card-surface p-4 mt-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+          <div class="d-flex align-items-center gap-3">
+            <div style="width:46px;height:46px;border-radius:12px;background:var(--teal-100);color:var(--teal-700);display:flex;align-items:center;justify-content:center;font-size:20px;">
+              <i class="bi bi-headset"></i>
+            </div>
+            <div>
+              <div class="fw-semibold">Still need help?</div>
+              <div class="text-muted small">Can't find the answer you're looking for? Contact our support team.</div>
+            </div>
+          </div>
+          <button class="btn-teal" type="button" data-jump-tab="contact"><i class="bi bi-envelope"></i> Contact Us</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== CONTACT ===================== -->
+  <div data-tab-panel="support" data-panel-name="contact" style="display:none;">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="card-surface p-4 h-100">
+          <div class="contact-info-item"><i class="bi bi-envelope"></i><span>support@jobshieldai.com</span></div>
+          <div class="contact-info-item"><i class="bi bi-telephone"></i><span>+91 98765 43210</span></div>
+          <div class="contact-info-item"><i class="bi bi-geo-alt"></i><span>Bangalore, Karnataka, India</span></div>
+          <div class="contact-info-item"><i class="bi bi-clock"></i><span>Mon - Sat: 9:00 AM - 6:00 PM</span></div>
+
+          <div class="mt-3">
+            <div class="fw-semibold mb-2 small text-uppercase text-muted">Connect With Us</div>
+            <div class="d-flex gap-2">
+              <a href="#" class="social-circle"><i class="bi bi-facebook"></i></a>
+              <a href="#" class="social-circle"><i class="bi bi-twitter-x"></i></a>
+              <a href="#" class="social-circle"><i class="bi bi-linkedin"></i></a>
+              <a href="#" class="social-circle"><i class="bi bi-instagram"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-8">
+        <div class="card-surface p-4">
+          <form id="contactForm">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label-teal">Full Name</label>
+                <input type="text" class="form-control-teal" placeholder="Enter your full name" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label-teal">Email Address</label>
+                <input type="email" class="form-control-teal" placeholder="Enter your email" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label-teal">Phone Number</label>
+                <input type="tel" class="form-control-teal" placeholder="Enter your phone number">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label-teal">Subject</label>
+                <select class="form-control-teal">
+                  <option>Select a subject</option>
+                  <option>Report a fake job</option>
+                  <option>Bug / technical issue</option>
+                  <option>Feedback & suggestions</option>
+                  <option>Partnership inquiry</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <label class="form-label-teal">Your Query</label>
+                <textarea class="form-control-teal" rows="5" placeholder="Type your message here…" required></textarea>
+              </div>
+              <div class="col-12">
+                <button type="submit" class="btn-teal"><i class="bi bi-send"></i> Send Message</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

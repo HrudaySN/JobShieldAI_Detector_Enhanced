@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block title %}Dashboard | JobShield AI{% endblock %}
+{% block extra_css %}
+<style>
+  .chart-box{position:relative;height:230px;}
+</style>
+{% endblock %}
+{% block content %}
+<div class="container-xl py-5">
+
+  <div class="mb-4">
+    <div class="page-kicker"><i class="bi bi-activity"></i> YOUR SAFETY WORKSPACE</div>
+    <h2 class="section-title mb-1">Dashboard</h2>
+    <p class="section-sub mb-0">{% if current_user.is_authenticated %}Welcome back, {{ current_user.username or current_user.email.split('@')[0] }}. {% endif %}Here's your overview.</p>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+      <div class="dash-stat">
+        <div class="icon-wrap" style="background:var(--teal-100);color:var(--teal-700)"><i class="bi bi-briefcase"></i></div>
+        <div><div class="num">{{ stats.total }}</div><div class="label">Jobs Analyzed</div></div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="dash-stat">
+        <div class="icon-wrap" style="background:var(--red-100);color:var(--red-500)"><i class="bi bi-shield-x"></i></div>
+        <div><div class="num">{{ stats.high }}</div><div class="label">High-Risk Jobs</div></div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="dash-stat">
+        <div class="icon-wrap" style="background:var(--teal-100);color:var(--teal-700)"><i class="bi bi-file-earmark-person"></i></div>
+        <div><div class="num">{{ stats.medium }}</div><div class="label">Medium-Risk Jobs</div></div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="dash-stat">
+        <div class="icon-wrap" style="background:var(--amber-100);color:var(--amber-500)"><i class="bi bi-graph-up"></i></div>
+        <div><div class="num">{{ stats.low }}</div><div class="label">Lower-Risk Jobs</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4 mb-4">
+    <div class="col-lg-7">
+      <div class="card-surface p-4 h-100">
+        <h6 class="mb-3">Analysis Overview</h6>
+        <div class="chart-box"><canvas id="overviewChart"></canvas></div>
+      </div>
+    </div>
+    <div class="col-lg-5">
+      <div class="card-surface p-4 h-100">
+        <h6 class="mb-3">Match Score Distribution</h6>
+        <div class="chart-box"><canvas id="matchChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <div class="card-surface p-4">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h6 class="mb-0">Recent Activity</h6>
+          <a href="{{ url_for('main.history') }}" class="btn-outline-teal btn-sm py-1">View All</a>
+        </div>
+        {% if recent %}
+        {% for item in recent %}
+        <div class="activity-item">
+          <div class="activity-dot" style="background:var(--{{ 'red-100' if item.risk_level == 'High' else 'amber-100' if item.risk_level == 'Medium' else 'green-100' }});color:var(--{{ 'red-500' if item.risk_level == 'High' else 'amber-500' if item.risk_level == 'Medium' else 'green-600' }})"><i class="bi {{ 'bi-x-lg' if item.risk_level == 'High' else 'bi-exclamation-lg' if item.risk_level == 'Medium' else 'bi-check-lg' }}"></i></div>
+          <div><div><strong>{{ (item.job_text[:65] ~ '…') if item.job_text|length > 65 else item.job_text }}</strong></div><div class="activity-time">{{ item.created_at.strftime('%d %b %Y · %I:%M %p') }} · {{ item.risk_level }} risk · {{ item.risk_score }}%</div></div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="empty-state">No job scans yet. <a href="{{ url_for('main.detector') }}">Run your first scan</a>.</div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="col-lg-5">
+      <div class="card-surface p-4">
+        <h6 class="mb-3">Top Red Flags Found</h6>
+        <div class="redflag-row"><span>High-risk scans</span><span class="fw-bold">{{ stats.high }}</span></div>
+        <div class="redflag-row"><span>Medium-risk scans</span><span class="fw-bold">{{ stats.medium }}</span></div>
+        <div class="redflag-row"><span>Lower-risk scans</span><span class="fw-bold">{{ stats.low }}</span></div>
+        <div class="redflag-row"><span>Total saved reports</span><span class="fw-bold">{{ stats.total }}</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var muted = getComputedStyle(document.documentElement).getPropertyValue('--text-muted').trim();
+  var border = getComputedStyle(document.documentElement).getPropertyValue('--border').trim();
+
+  new Chart(document.getElementById('overviewChart'), {
+    type: 'line',
+    data: {
+      labels: ['May 13','May 14','May 15','May 16','May 17','May 18','May 19'],
+      datasets: [
+        { label: 'Jobs Analyzed', data: [14,18,16,22,19,25,21], borderColor: '#0d9488', backgroundColor:'rgba(13,148,136,.12)', tension:.35, fill:true },
+        { label: 'Fake Jobs Detected', data: [5,8,6,10,7,12,9], borderColor: '#e14848', backgroundColor:'rgba(225,72,72,.10)', tension:.35, fill:true }
+      ]
+    },
+    options: {
+      maintainAspectRatio:false,
+      plugins:{ legend:{ position:'bottom', labels:{ color: muted, boxWidth:10, font:{size:11} } } },
+      scales:{
+        x:{ grid:{ color: border }, ticks:{ color: muted, font:{size:10} } },
+        y:{ grid:{ color: border }, ticks:{ color: muted, font:{size:10} } }
+      }
+    }
+  });
+
+  new Chart(document.getElementById('matchChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['High (75-100%)','Medium (40-74%)','Low (0-39%)'],
+      datasets: [{ data: [45,35,20], backgroundColor: ['#0d9488','#e2a13a','#e14848'], borderWidth:0 }]
+    },
+    options: {
+      maintainAspectRatio:false,
+      plugins:{ legend:{ position:'bottom', labels:{ color: muted, boxWidth:10, font:{size:11} } } }
+    }
+  });
+});
+</script>
+{% endblock %}

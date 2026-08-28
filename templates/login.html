@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log in</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="login-box">
+
+        <div class="auth-form-panel">
+
+            <a href="{{ url_for('main.home') }}" class="auth-brand">
+                <span class="brand-mark"><i class="bi bi-shield-check"></i></span>
+                <span>JobShield AI</span>
+            </a>
+
+            <h1>Welcome back!</h1>
+            <p>Please log in to your account.</p>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <ul class="login-messages">
+                {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+
+            <form method="POST">
+
+                {{ form.hidden_tag() }}
+
+                {% if form.errors.get('_form') %}
+                <ul class="login-messages">
+                    {% for error in form.errors['_form'] %}
+                    <li class="error">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                <label for="{{ form.email.id }}">Email address</label>
+                {{ form.email(placeholder="you@example.com") }}
+                {% for error in form.email.errors %}
+                <div class="field-error">{{ error }}</div>
+                {% endfor %}
+
+                <label for="{{ form.password.id }}">Password</label>
+                {{ form.password(placeholder="Enter your password") }}
+                {% for error in form.password.errors %}
+                <div class="field-error">{{ error }}</div>
+                {% endfor %}
+
+                <div class="form-row-between">
+                    <label class="remember-me">
+                        <input type="checkbox" name="remember_me">
+                        Remember me
+                    </label>
+                    <a href="{{ url_for('auth.reset_password_request') }}" class="forgot">Forgot password?</a>
+                </div>
+
+                <div class="auth-btn-row">
+                    <button type="submit" class="login-btn">Login</button>
+                    <a href="{{ url_for('auth.signup') }}" class="btn-secondary-outline">Create account</a>
+                </div>
+
+            </form>
+
+            <a href="{{ url_for('auth.google_login') }}" class="google-btn">
+                <img src="https://cdn-icons-png.flaticon.com/512/281/281764.png">
+                <span>Continue with Google</span>
+            </a>
+
+            <p class="fine-print">
+                By logging in, you agree to our <a href="#">Terms</a> and that you have read our
+                <a href="#">Data Policy</a>.
+            </p>
+
+        </div>
+
+        {% with visual_title="Detect fake jobs before they detect you", visual_text="Every login keeps you inside a workspace that scans postings and resumes for scam signals in real time." %}
+        {% include "_auth_visual.html" %}
+        {% endwith %}
+
+    </div>
+
+</div>
+
+</body>
+</html>

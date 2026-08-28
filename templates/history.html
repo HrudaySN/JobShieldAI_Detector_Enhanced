@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}History | JobShield AI{% endblock %}
+{% block content %}
+<div class="container-xl py-5">
+
+  <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
+    <div>
+      <h2 class="section-title mb-1">History</h2>
+      <p class="section-sub mb-0">View your past job analyses and resume screenings.</p>
+    </div>
+    <button class="btn-outline-teal"><i class="bi bi-funnel"></i> Filter</button>
+  </div>
+
+  <div class="tab-pill-group mb-3">
+    <button class="tab-pill active" data-history-tab="jobs">Job Analyses</button>
+    <button class="tab-pill" data-history-tab="resumes">Resume Screenings</button>
+  </div>
+
+  <div data-history-panel="jobs">
+    <div class="table-surface">
+      <div class="table-responsive">
+      <table class="table mb-0">
+        <thead>
+          <tr>
+            <th>Type</th><th>Title / Role</th><th>Result</th><th>Score</th><th>Date</th><th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in analyses %}
+          <tr>
+            <td><i class="bi bi-shield-fill" style="color:var(--{{ 'red-500' if item.risk_level == 'High' else 'amber-500' if item.risk_level == 'Medium' else 'green-600' }})"></i></td>
+            <td>{{ item.job_text[:70] }}{% if item.job_text|length > 70 %}…{% endif %}</td>
+            <td><span class="pill-tag {{ 'fake' if item.risk_level == 'High' else 'review' if item.risk_level == 'Medium' else 'genuine' }}">{{ item.risk_level }} Risk</span></td>
+            <td>{{ item.risk_score }}%</td>
+            <td>{{ item.created_at.strftime('%d %b %Y') }}</td>
+            <td><button type="button" class="history-view-btn" data-analysis-id="{{ item.id }}" title="View report"><i class="bi bi-eye text-muted"></i></button></td>
+          </tr>
+          {% else %}
+          <tr><td colspan="6" class="text-center py-5 text-muted">No saved job analyses yet. <a href="{{ url_for('main.detector') }}">Scan a job</a> and save the report.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+  </div>
+
+  <div data-history-panel="resumes" style="display:none;">
+    <div class="table-surface">
+      <div class="table-responsive">
+      <table class="table mb-0">
+        <thead>
+          <tr>
+            <th>Resume</th><th>Target Role</th><th>Match Score</th><th>Date</th><th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Data_Scientist_Resume.pdf</td>
+            <td>Data Scientist</td>
+            <td><span class="pill-tag genuine">85%</span></td>
+            <td>May 19, 2026</td>
+            <td><i class="bi bi-eye text-muted"></i></td>
+          </tr>
+          <tr>
+            <td>Web_Dev_Resume.docx</td>
+            <td>Frontend Developer</td>
+            <td><span class="pill-tag review">62%</span></td>
+            <td>May 18, 2026</td>
+            <td><i class="bi bi-eye text-muted"></i></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal fade" id="historyReportModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable"><div class="modal-content card-surface">
+    <div class="modal-header"><h5 class="modal-title">Saved JobShield Report</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+    <div class="modal-body" id="historyReportBody"></div>
+  </div></div>
+</div>
+{% endblock %}
+{% block extra_js %}<script>
+document.querySelectorAll('.history-view-btn').forEach(btn => btn.addEventListener('click', async () => {
+  const response = await fetch('/api/analysis/' + btn.dataset.analysisId); const data = await response.json();
+  const r = data.result;
+  document.getElementById('historyReportBody').innerHTML = `<div class="result-section-title"><i class="bi bi-shield-check"></i> ${r.risk_level} risk · ${r.risk_score}%</div><p><strong>${r.verdict}</strong></p><h6>Why this result?</h6>${(r.evidence||[]).map(x=>`<div class="evidence-row"><span class="evidence-phrase">“${x.phrase}”</span><span>${x.message}</span></div>`).join('')||'<p class="text-muted">No strong suspicious phrase matched.</p>'}<h6 class="mt-3">What to do next</h6>${(r.actions||[]).map(x=>`<div class="action-row"><i class="bi bi-arrow-right-circle-fill"></i><span>${x}</span></div>`).join('')}<h6 class="mt-3">Job source</h6><p class="small text-muted mb-0">${data.job_url||'No URL'} · ${data.recruiter_email||'No recruiter email'} · ${data.company_website||'No company website'}</p>`;
+  bootstrap.Modal.getOrCreateInstance(document.getElementById('historyReportModal')).show();
+}));
+</script>
+{% endblock %}

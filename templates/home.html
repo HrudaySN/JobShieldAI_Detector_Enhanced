@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}JobShield AI | Detect Fake Jobs & Screen Resumes{% endblock %}
+{% block content %}
+
+<header class="hero-section">
+  <div class="container-xl">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <div class="hero-eyebrow mb-2"><i class="bi bi-shield-check"></i> JOBSHIELD AI · JOB SAFETY INTELLIGENCE</div>
+        <h1 class="hero-logo mb-3" aria-label="Detect Fake Jobs Before They Detect You">
+          <span class="hero-name" data-reveal-text="Detect Fake Jobs">Detect Fake Jobs</span>
+          <span class="hero-ai hero-headline-ai" data-reveal-text="Before They Detect You">Before They Detect You</span>
+        </h1>
+        <div class="hero-product-line"><span></span> SCAN FIRST. APPLY WITH CONFIDENCE.</div>
+        <p class="lead-text mb-2 hero-copy">Your intelligent platform to <strong>Detect Fake Jobs</strong> and <strong>Screen Resumes</strong> with the power of AI.</p>
+        <p class="lead-text hero-copy">Helping job seekers stay safe from scams and helping recruiters find the right talent faster.</p>
+        <div class="d-flex gap-3 flex-wrap mt-4">
+          <a href="{{ url_for('main.detector') }}" class="btn-teal">Get Started <i class="bi bi-arrow-up-right"></i></a>
+          <a href="{{ url_for('main.support') }}" class="btn-outline-teal">Learn More</a>
+        </div>
+      </div>
+      <div class="col-lg-6 text-center">
+        <div class="trust-orbit" aria-label="JobShield AI analysis illustration">
+          <div class="orbit-ring orbit-one"></div><div class="orbit-ring orbit-two"></div>
+          <div class="signal-dot dot-one"></div><div class="signal-dot dot-two"></div><div class="signal-dot dot-three"></div>
+          <div class="shield-core"><i class="bi bi-shield-check"></i><span>AI</span></div>
+          <div class="insight-card insight-safe"><i class="bi bi-check-circle-fill"></i><span>Trust signals<br><strong>verified</strong></span></div>
+          <div class="insight-card insight-risk"><i class="bi bi-exclamation-triangle-fill"></i><span>Risk pattern<br><strong>flagged</strong></span></div>
+          <div class="insight-card insight-scan"><i class="bi bi-radar"></i><span>Live scan<br><strong>in progress</strong></span></div>
+        </div>
+        <div class="scanner-console text-start">
+          <div class="scanner-title"><i class="bi bi-cpu"></i> AI JOB SCANNER <span>READY</span></div>
+          <div class="scanner-progress"><div></div></div>
+          <div class="scanner-checks"><span><i class="bi bi-check-circle-fill"></i> Reads job information</span><span><i class="bi bi-check-circle-fill"></i> Checks scam language</span><span><i class="bi bi-check-circle-fill"></i> Explains risk signals</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="container-xl mb-5">
+  <div class="stat-strip">
+    <div class="row g-0">
+      <div class="col-6 col-lg-3 stat-item">
+        <div class="stat-icon"><i class="bi bi-briefcase"></i></div>
+        <div><div class="stat-num">24</div><div class="stat-label">Labelled starter records</div></div>
+      </div>
+      <div class="col-6 col-lg-3 stat-item">
+        <div class="stat-icon"><i class="bi bi-shield-x"></i></div>
+        <div><div class="stat-num">14</div><div class="stat-label">High-risk signals checked</div></div>
+      </div>
+      <div class="col-6 col-lg-3 stat-item">
+        <div class="stat-icon"><i class="bi bi-file-earmark-person"></i></div>
+        <div><div class="stat-num">100%</div><div class="stat-label">Local, explainable analysis</div></div>
+      </div>
+      <div class="col-6 col-lg-3 stat-item">
+        <div class="stat-icon"><i class="bi bi-graph-up-arrow"></i></div>
+        <div><div class="stat-num">0</div><div class="stat-label">Data shared with third parties</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-pad">
+  <div class="container-xl">
+    <h2 class="section-title text-center">What JobShield AI does for you</h2>
+    <p class="section-sub text-center">Four tools, one mission — a safer, smarter job search.</p>
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-3">
+        <div class="feature-card">
+          <div class="icon-wrap"><i class="bi bi-search"></i></div>
+          <h5>Fake Job Detector</h5>
+          <p>Paste or upload a job post and get an instant AI verdict with confidence score and reasons.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="feature-card">
+          <div class="icon-wrap"><i class="bi bi-file-earmark-person"></i></div>
+          <h5>AI Resume Screening</h5>
+          <p>Upload your resume and get matched skills, recommended jobs, and tips to earn more.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="feature-card">
+          <div class="icon-wrap"><i class="bi bi-bar-chart-line"></i></div>
+          <h5>Personal Dashboard</h5>
+          <p>Track every analysis and screening you've run with clear charts and trends.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="feature-card">
+          <div class="icon-wrap"><i class="bi bi-clock-history"></i></div>
+          <h5>Full History</h5>
+          <p>Revisit past job analyses and resume screenings any time, all in one place.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

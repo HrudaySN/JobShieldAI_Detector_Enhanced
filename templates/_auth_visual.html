@@ -1,0 +1,16 @@
+<div class="auth-visual-panel">
+    <div class="visual-radar">
+        <span class="radar-ring r1"></span>
+        <span class="radar-ring r2"></span>
+        <span class="radar-ring r3"></span>
+        <div class="visual-shield"><i class="bi bi-shield-fill-check"></i></div>
+        <div class="visual-chip chip-genuine"><i class="bi bi-check-circle-fill"></i> Genuine Job</div>
+        <div class="visual-chip chip-fake"><i class="bi bi-x-circle-fill"></i> Fake Job Flagged</div>
+    </div>
+    <div class="visual-caption">
+        <h3>{{ visual_title }}</h3>
+        <p>{{ visual_text }}</p>
+    </div>
+    <div class="visual-badge-mini"><i class="bi bi-search"></i></div>
+    <a href="{{ url_for('main.home') }}" class="visual-nav-btn" aria-label="Back to home"><i class="bi bi-arrow-right"></i></a>
+</div>
