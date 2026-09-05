@@ -21,6 +21,7 @@ class User(db.Model, UserMixin):
 
     # True until the user finishes the "choose a username" step after signup
     needs_username = db.Column(db.Boolean, default=True, nullable=False)
+    is_admin = db.Column(db.Boolean, default=False, nullable=False)
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 

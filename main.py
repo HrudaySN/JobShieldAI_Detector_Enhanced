@@ -16,11 +16,13 @@ def home():
 
 
 @main_bp.route("/detector")
+@login_required
 def detector():
     return render_template("detector.html", active_page="detector", training_examples=model.examples)
 
 
 @main_bp.route("/api/analyze-job", methods=["POST"])
+@login_required
 def analyze_job():
     payload = request.get_json(silent=True) or {}
     try:
@@ -69,6 +71,7 @@ def get_analysis(analysis_id):
 
 
 @main_bp.route("/resume-screening")
+@login_required
 def resume_screen():
     return render_template("resume.html", active_page="resume")
 

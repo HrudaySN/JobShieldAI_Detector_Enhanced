@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Admin Panel | JobShield AI{% endblock %}
+{% block content %}
+<div class="container-xl py-5">
+
+  <div class="mb-4">
+    <div class="page-kicker"><i class="bi bi-shield-lock"></i> ADMIN</div>
+    <h2 class="section-title mb-1">Users</h2>
+    <p class="section-sub mb-0">{{ users|length }} registered account{{ 's' if users|length != 1 }}.</p>
+  </div>
+
+  <div class="table-surface">
+    <div class="table-responsive">
+      <table class="table mb-0">
+        <thead>
+          <tr>
+            <th>User</th><th>Email</th><th>Sign-in method</th><th>Role</th><th>Joined</th><th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for u in users %}
+          <tr>
+            <td>{{ u.username or '—' }}</td>
+            <td>{{ u.email }}</td>
+            <td>{{ 'Google' if u.google_id else 'Email/Password' }}</td>
+            <td>{% if u.is_admin %}<span class="pill-tag fake">Admin</span>{% else %}<span class="pill-tag genuine">Member</span>{% endif %}</td>
+            <td>{{ u.created_at.strftime('%d %b %Y') }}</td>
+            <td><a href="{{ url_for('admin.user_detail', user_id=u.id) }}" class="btn-outline-teal btn-sm py-1">Manage</a></td>
+          </tr>
+          {% else %}
+          <tr><td colspan="6" class="text-center py-5 text-muted">No users yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

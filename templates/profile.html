@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}My Profile | JobShield AI{% endblock %}
+{% block content %}
+<div class="container-xl py-5">
+
+  <div class="mb-4">
+    <div class="page-kicker"><i class="bi bi-person-circle"></i> ACCOUNT</div>
+    <h2 class="section-title mb-1">My Profile</h2>
+    <p class="section-sub mb-0">Manage your account details and password.</p>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-4">
+      <div class="card-surface p-4 text-center">
+        <div class="profile-avatar mx-auto mb-3" style="width:72px;height:72px;font-size:28px;">
+          {{ (current_user.username or current_user.email)[0]|upper }}
+        </div>
+        <h5 class="mb-1">{{ current_user.username or 'Not set yet' }}</h5>
+        <p class="text-muted small mb-2">{{ current_user.email }}</p>
+        <span class="pill-tag genuine">{{ 'Google Sign-In' if current_user.google_id else 'Email & Password' }}</span>
+        <p class="text-muted small mt-3 mb-0">Member since {{ current_user.created_at.strftime('%d %b %Y') }}</p>
+      </div>
+    </div>
+
+    <div class="col-lg-8">
+      <div class="card-surface p-4 mb-4">
+        <h6 class="mb-3"><i class="bi bi-pencil-square me-1"></i> Edit profile</h6>
+        <form method="POST" action="{{ url_for('profile.edit_profile') }}">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label small fw-semibold">Username</label>
+              <input type="text" name="username" class="form-control" value="{{ current_user.username or '' }}" maxlength="80">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-semibold">Email</label>
+              <input type="email" class="form-control" value="{{ current_user.email }}" disabled>
+              <div class="form-hint">Email can't be changed here — contact support if needed.</div>
+            </div>
+          </div>
+          <button type="submit" class="btn-teal mt-3"><i class="bi bi-check2"></i> Save changes</button>
+        </form>
+      </div>
+
+      {% if current_user.password_hash %}
+      <div class="card-surface p-4">
+        <h6 class="mb-3"><i class="bi bi-shield-lock me-1"></i> Change password</h6>
+        <form method="POST" action="{{ url_for('profile.change_password') }}">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label small fw-semibold">Current password</label>
+              <input type="password" name="current_password" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label small fw-semibold">New password</label>
+              <input type="password" name="new_password" class="form-control" minlength="8" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label small fw-semibold">Confirm new password</label>
+              <input type="password" name="confirm_password" class="form-control" minlength="8" required>
+            </div>
+          </div>
+          <button type="submit" class="btn-outline-teal mt-3"><i class="bi bi-key"></i> Change password</button>
+        </form>
+      </div>
+      {% else %}
+      <div class="card-surface p-4">
+        <h6 class="mb-2"><i class="bi bi-google me-1"></i> Signed in with Google</h6>
+        <p class="text-muted small mb-0">Your account uses Google Sign-In, so there's no password to manage here.</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
