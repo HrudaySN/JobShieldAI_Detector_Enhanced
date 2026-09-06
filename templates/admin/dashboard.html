@@ -1,34 +1,72 @@
 {% extends "base.html" %}
 {% block title %}Admin Panel | JobShield AI{% endblock %}
 {% block content %}
-<div class="container-xl py-5">
-
-  <div class="mb-4">
-    <div class="page-kicker"><i class="bi bi-shield-lock"></i> ADMIN</div>
-    <h2 class="section-title mb-1">Users</h2>
-    <p class="section-sub mb-0">{{ users|length }} registered account{{ 's' if users|length != 1 }}.</p>
+<div class="admin-page">
+  <div class="admin-header">
+    <div>
+      <div class="page-kicker"><i class="bi bi-shield-lock"></i> ADMIN CONTROL CENTER</div>
+      <h2 class="admin-title">User Management</h2>
+      <p class="admin-subtitle">Review registered accounts and manage access safely.</p>
+    </div>
+    <div class="admin-count">
+      <i class="bi bi-people"></i>
+      <div><strong>{{ users|length }}</strong><span>Registered users</span></div>
+    </div>
   </div>
 
-  <div class="table-surface">
+  <div class="admin-info-strip">
+    <i class="bi bi-shield-check"></i>
+    <div><strong>Administrator workspace</strong><span>Use Manage to edit account details, reset passwords, or review saved analyses.</span></div>
+  </div>
+
+  <div class="admin-table-card">
+    <div class="admin-table-top">
+      <div>
+        <h5><i class="bi bi-people me-1"></i> All users</h5>
+        <p>Account access and sign-in information</p>
+      </div>
+      <span class="admin-live"><span></span> Live</span>
+    </div>
+
     <div class="table-responsive">
-      <table class="table mb-0">
+      <table class="table admin-users-table mb-0">
         <thead>
           <tr>
-            <th>User</th><th>Email</th><th>Sign-in method</th><th>Role</th><th>Joined</th><th>Action</th>
+            <th>User</th><th>Email</th><th>Sign-in method</th><th>Role</th><th>Joined</th><th></th>
           </tr>
         </thead>
         <tbody>
           {% for u in users %}
           <tr>
-            <td>{{ u.username or '—' }}</td>
-            <td>{{ u.email }}</td>
-            <td>{{ 'Google' if u.google_id else 'Email/Password' }}</td>
-            <td>{% if u.is_admin %}<span class="pill-tag fake">Admin</span>{% else %}<span class="pill-tag genuine">Member</span>{% endif %}</td>
-            <td>{{ u.created_at.strftime('%d %b %Y') }}</td>
-            <td><a href="{{ url_for('admin.user_detail', user_id=u.id) }}" class="btn-outline-teal btn-sm py-1">Manage</a></td>
+            <td>
+              <div class="admin-user-cell">
+                <span class="admin-user-avatar">{{ (u.username or u.email)[0]|upper }}</span>
+                <div><strong>{{ u.username or 'Unnamed user' }}</strong><small>ID #{{ u.id }}</small></div>
+              </div>
+            </td>
+            <td><span class="admin-email">{{ u.email }}</span></td>
+            <td>
+              <span class="admin-method">
+                <i class="bi {{ 'bi-google' if u.google_id else 'bi-envelope' }}"></i>
+                {{ 'Google' if u.google_id else 'Email / Password' }}
+              </span>
+            </td>
+            <td>
+              {% if u.is_admin %}
+              <span class="admin-role admin-role-admin"><i class="bi bi-shield-fill-check"></i> Admin</span>
+              {% else %}
+              <span class="admin-role admin-role-member"><i class="bi bi-person-check"></i> Member</span>
+              {% endif %}
+            </td>
+            <td><span class="admin-date">{{ u.created_at.strftime('%d %b %Y') }}</span></td>
+            <td class="text-end">
+              <a href="{{ url_for('admin.user_detail', user_id=u.id) }}" class="admin-manage-btn">
+                Manage <i class="bi bi-arrow-right"></i>
+              </a>
+            </td>
           </tr>
           {% else %}
-          <tr><td colspan="6" class="text-center py-5 text-muted">No users yet.</td></tr>
+          <tr><td colspan="6"><div class="admin-empty"><i class="bi bi-people"></i><strong>No users yet</strong><span>Registered accounts will appear here.</span></div></td></tr>
           {% endfor %}
         </tbody>
       </table>

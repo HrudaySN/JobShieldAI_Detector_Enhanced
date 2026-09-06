@@ -1,78 +1,108 @@
 {% extends "base.html" %}
 {% block title %}Manage {{ user.email }} | JobShield AI{% endblock %}
 {% block content %}
-<div class="container-xl py-5">
-
-  <div class="mb-4 d-flex justify-content-between align-items-start flex-wrap gap-2">
+<div class="admin-page">
+  <div class="admin-header admin-detail-header">
     <div>
-      <div class="page-kicker"><i class="bi bi-shield-lock"></i> ADMIN</div>
-      <h2 class="section-title mb-1">{{ user.username or user.email }}</h2>
-      <p class="section-sub mb-0">Joined {{ user.created_at.strftime('%d %b %Y') }}</p>
+      <div class="page-kicker"><i class="bi bi-shield-lock"></i> ADMIN / USER</div>
+      <div class="admin-detail-identity">
+        <span class="admin-detail-avatar">{{ (user.username or user.email)[0]|upper }}</span>
+        <div>
+          <h2 class="admin-title">{{ user.username or user.email }}</h2>
+          <p class="admin-subtitle">Joined {{ user.created_at.strftime('%d %b %Y') }} · {{ user.email }}</p>
+        </div>
+      </div>
     </div>
-    <a href="{{ url_for('admin.dashboard') }}" class="btn-outline-teal btn-sm"><i class="bi bi-arrow-left"></i> All users</a>
+    <a href="{{ url_for('admin.dashboard') }}" class="admin-back-btn"><i class="bi bi-arrow-left"></i> All users</a>
   </div>
 
-  <div class="row g-4">
-    <div class="col-lg-6">
-      <div class="card-surface p-4">
-        <h6 class="mb-3"><i class="bi bi-pencil-square me-1"></i> Edit user</h6>
-        <form method="POST" action="{{ url_for('admin.edit_user', user_id=user.id) }}">
-          <div class="mb-3">
-            <label class="form-label small fw-semibold">Username</label>
-            <input type="text" name="username" class="form-control" value="{{ user.username or '' }}" maxlength="80">
-          </div>
-          <div class="mb-3">
-            <label class="form-label small fw-semibold">Email</label>
-            <input type="email" name="email" class="form-control" value="{{ user.email }}" maxlength="255">
-          </div>
-          <div class="form-check mb-3">
-            <input type="checkbox" class="form-check-input" name="is_admin" id="isAdminCheck" {{ 'checked' if user.is_admin }} {{ 'disabled' if user.id == current_user.id }}>
-            <label class="form-check-label" for="isAdminCheck">Admin access</label>
-            {% if user.id == current_user.id %}<div class="form-hint">You can't change your own admin status here.</div>{% endif %}
-          </div>
-          <button type="submit" class="btn-teal"><i class="bi bi-check2"></i> Save changes</button>
-        </form>
-      </div>
+  <div class="admin-detail-grid">
+    <div>
+      <section class="admin-card">
+        <div class="admin-card-heading">
+          <div class="admin-card-icon"><i class="bi bi-pencil-square"></i></div>
+          <div><h5>Edit user</h5><p>Update account details and permissions.</p></div>
+        </div>
 
-      <div class="card-surface p-4 mt-4">
-        <h6 class="mb-3"><i class="bi bi-key me-1"></i> Password</h6>
+        <form method="POST" action="{{ url_for('admin.edit_user', user_id=user.id) }}">
+          <div class="admin-form-group">
+            <label><i class="bi bi-person"></i> Username</label>
+            <input type="text" name="username" class="admin-input" value="{{ user.username or '' }}" maxlength="80">
+          </div>
+          <div class="admin-form-group">
+            <label><i class="bi bi-envelope"></i> Email</label>
+            <input type="email" name="email" class="admin-input" value="{{ user.email }}" maxlength="255">
+          </div>
+
+          <div class="admin-permission-box">
+            <div class="form-check mb-0">
+              <input type="checkbox" class="form-check-input" name="is_admin" id="isAdminCheck"
+                     {{ 'checked' if user.is_admin }} {{ 'disabled' if user.id == current_user.id }}>
+              <label class="form-check-label" for="isAdminCheck"><strong>Administrator access</strong><small>Allow this account to access the Admin Panel.</small></label>
+            </div>
+            {% if user.id == current_user.id %}
+            <div class="form-hint">You can't change your own admin status here.</div>
+            {% endif %}
+          </div>
+
+          <button type="submit" class="admin-primary-btn"><i class="bi bi-check2-circle"></i> Save Changes</button>
+        </form>
+      </section>
+
+      <section class="admin-card admin-password-card">
+        <div class="admin-card-heading">
+          <div class="admin-card-icon security-icon"><i class="bi bi-key"></i></div>
+          <div><h5>Password access</h5><p>Help the user recover their account securely.</p></div>
+        </div>
+
         {% if user.password_hash %}
-        <p class="text-muted small">Send this user a password reset link.</p>
+        <p class="admin-muted">Send this user a password reset link. Their existing password will not be shown.</p>
         <form method="POST" action="{{ url_for('admin.reset_password', user_id=user.id) }}">
-          <button type="submit" class="btn-outline-teal btn-sm"><i class="bi bi-envelope"></i> Send reset link</button>
+          <button type="submit" class="admin-secondary-btn"><i class="bi bi-envelope"></i> Send Reset Link</button>
         </form>
         {% else %}
-        <p class="text-muted small mb-0">This user signs in with Google — no password on file.</p>
+        <div class="admin-google-note"><i class="bi bi-google"></i><span>This user signs in with Google, so there is no password on file.</span></div>
         {% endif %}
-      </div>
+      </section>
 
       {% if user.id != current_user.id %}
-      <div class="card-surface p-4 mt-4" style="border-color:var(--red-500)">
-        <h6 class="mb-2 text-danger"><i class="bi bi-exclamation-triangle me-1"></i> Danger zone</h6>
-        <p class="text-muted small">Deletes this user and all their saved analyses. This can't be undone.</p>
-        <form method="POST" action="{{ url_for('admin.delete_user', user_id=user.id) }}" onsubmit="return confirm('Delete {{ user.email }} and all their data? This cannot be undone.');">
-          <button type="submit" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash"></i> Delete user</button>
+      <section class="admin-card admin-danger-card">
+        <div class="admin-card-heading">
+          <div class="admin-card-icon danger-icon"><i class="bi bi-exclamation-triangle"></i></div>
+          <div><h5>Danger zone</h5><p>Permanent account removal.</p></div>
+        </div>
+        <p class="admin-muted">Deletes this user and all their saved analyses. This action cannot be undone.</p>
+        <form method="POST" action="{{ url_for('admin.delete_user', user_id=user.id) }}"
+              onsubmit="return confirm('Delete {{ user.email }} and all their data? This cannot be undone.');">
+          <button type="submit" class="admin-danger-btn"><i class="bi bi-trash"></i> Delete User</button>
         </form>
-      </div>
+      </section>
       {% endif %}
     </div>
 
-    <div class="col-lg-6">
-      <div class="card-surface p-4">
-        <h6 class="mb-3">Job analyses ({{ analyses|length }})</h6>
+    <section class="admin-card admin-activity-card">
+      <div class="admin-card-heading">
+        <div class="admin-card-icon"><i class="bi bi-activity"></i></div>
+        <div><h5>Job analyses</h5><p>{{ analyses|length }} saved analysis{{ 'es' if analyses|length != 1 else '' }}.</p></div>
+      </div>
+
+      <div class="admin-analysis-list">
         {% for item in analyses[:10] %}
-        <div class="activity-item">
-          <div class="activity-dot" style="background:var(--{{ 'red-100' if item.risk_level == 'High' else 'amber-100' if item.risk_level == 'Medium' else 'green-100' }});color:var(--{{ 'red-500' if item.risk_level == 'High' else 'amber-500' if item.risk_level == 'Medium' else 'green-600' }})"><i class="bi bi-shield-fill"></i></div>
-          <div>
-            <div><strong>{{ (item.job_text[:60] ~ '…') if item.job_text|length > 60 else item.job_text }}</strong></div>
-            <div class="activity-time">{{ item.created_at.strftime('%d %b %Y') }} · {{ item.risk_level }} risk · {{ item.risk_score }}%</div>
+        <div class="admin-analysis-item">
+          <div class="admin-analysis-icon
+            {% if item.risk_level == 'High' %}risk-high{% elif item.risk_level == 'Medium' %}risk-medium{% else %}risk-low{% endif %}">
+            <i class="bi bi-shield-fill"></i>
+          </div>
+          <div class="admin-analysis-copy">
+            <strong>{{ (item.job_text[:60] ~ '…') if item.job_text|length > 60 else item.job_text }}</strong>
+            <span>{{ item.created_at.strftime('%d %b %Y') }} · {{ item.risk_level }} risk · {{ item.risk_score }}%</span>
           </div>
         </div>
         {% else %}
-        <div class="empty-state">No saved analyses for this user.</div>
+        <div class="admin-empty"><i class="bi bi-clipboard2-x"></i><strong>No saved analyses</strong><span>This user has no saved job analyses yet.</span></div>
         {% endfor %}
       </div>
-    </div>
+    </section>
   </div>
 </div>
 {% endblock %}
