@@ -2,37 +2,82 @@
 {% block title %}JobShield AI | Detect Fake Jobs & Screen Resumes{% endblock %}
 {% block content %}
 
-<header class="hero-section">
+<header class="dj-main-hero">
+  <div class="dj-main-hero-bg" aria-hidden="true"></div>
   <div class="container-xl">
-    <div class="row align-items-center g-5">
-      <div class="col-lg-6">
-        <div class="hero-eyebrow mb-2"><i class="bi bi-shield-check"></i> JOBSHIELD AI · JOB SAFETY INTELLIGENCE</div>
-        <h1 class="hero-logo mb-3" aria-label="Detect Fake Jobs Before They Detect You">
-          <span class="hero-name" data-reveal-text="Detect Fake Jobs">Detect Fake Jobs</span>
-          <span class="hero-ai hero-headline-ai" data-reveal-text="Before They Detect You">Before They Detect You</span>
+    <div class="dj-main-hero-content">
+      <div class="dj-main-hero-copy">
+        <div class="dj-main-eyebrow">
+          <i class="bi bi-shield-check"></i>
+          AI POWERED · JOB SAFETY · RESUME INSIGHTS
+        </div>
+
+        <h1>
+          Your Dream Job<br>
+          Deserves a <span>Safe Path.</span>
         </h1>
-        <div class="hero-product-line"><span></span> SCAN FIRST. APPLY WITH CONFIDENCE.</div>
-        <p class="lead-text mb-2 hero-copy">Your intelligent platform to <strong>Detect Fake Jobs</strong> and <strong>Screen Resumes</strong> with the power of AI.</p>
-        <p class="lead-text hero-copy">Helping job seekers stay safe from scams and helping recruiters find the right talent faster.</p>
-        <div class="d-flex gap-3 flex-wrap mt-4">
-          <a href="{{ url_for('main.detector') }}" class="btn-teal">Get Started <i class="bi bi-arrow-up-right"></i></a>
-          <a href="{{ url_for('main.support') }}" class="btn-outline-teal">Learn More</a>
+
+        <p>
+          JobShield helps you detect fake job postings,<br class="dj-desktop-break">
+          screen resumes, and make smarter career decisions
+          with confidence.
+        </p>
+
+        <div class="dj-main-actions">
+          <a href="{{ url_for('main.detector') }}" class="dj-main-btn dj-main-btn-primary">
+            <i class="bi bi-search"></i>
+            Check a Job
+          </a>
+
+          <a href="{{ url_for('main.support') }}" class="dj-main-btn dj-main-btn-outline">
+            <i class="bi bi-file-earmark-person"></i>
+            Screen My Resume
+          </a>
         </div>
       </div>
-      <div class="col-lg-6 text-center">
-        <div class="trust-orbit" aria-label="JobShield AI analysis illustration">
-          <div class="orbit-ring orbit-one"></div><div class="orbit-ring orbit-two"></div>
-          <div class="signal-dot dot-one"></div><div class="signal-dot dot-two"></div><div class="signal-dot dot-three"></div>
-          <div class="shield-core"><i class="bi bi-shield-check"></i><span>AI</span></div>
-          <div class="insight-card insight-safe"><i class="bi bi-check-circle-fill"></i><span>Trust signals<br><strong>verified</strong></span></div>
-          <div class="insight-card insight-risk"><i class="bi bi-exclamation-triangle-fill"></i><span>Risk pattern<br><strong>flagged</strong></span></div>
-          <div class="insight-card insight-scan"><i class="bi bi-radar"></i><span>Live scan<br><strong>in progress</strong></span></div>
+
+      <div class="dj-main-hero-spacer" aria-hidden="true"></div>
+    </div>
+
+    <div class="dj-main-stats">
+      <div class="dj-main-stat">
+        <div class="dj-main-stat-icon"><i class="bi bi-shield-check"></i></div>
+        <div>
+          <strong>25K+</strong>
+          <span>Jobs Analyzed</span>
+          <small>Real opportunities. Verified.</small>
         </div>
-        <div class="scanner-console text-start">
-          <div class="scanner-title"><i class="bi bi-cpu"></i> AI JOB SCANNER <span>READY</span></div>
-          <div class="scanner-progress"><div></div></div>
-          <div class="scanner-checks"><span><i class="bi bi-check-circle-fill"></i> Reads job information</span><span><i class="bi bi-check-circle-fill"></i> Checks scam language</span><span><i class="bi bi-check-circle-fill"></i> Explains risk signals</span></div>
+        <i class="bi bi-arrow-right dj-main-stat-arrow"></i>
+      </div>
+
+      <div class="dj-main-stat">
+        <div class="dj-main-stat-icon"><i class="bi bi-people"></i></div>
+        <div>
+          <strong>15K+</strong>
+          <span>Users Protected</span>
+          <small>A safer community.</small>
         </div>
+        <i class="bi bi-arrow-right dj-main-stat-arrow"></i>
+      </div>
+
+      <div class="dj-main-stat">
+        <div class="dj-main-stat-icon"><i class="bi bi-speedometer2"></i></div>
+        <div>
+          <strong>98.7%</strong>
+          <span>Accuracy Rate</span>
+          <small>Powered by AI.</small>
+        </div>
+        <i class="bi bi-arrow-right dj-main-stat-arrow"></i>
+      </div>
+
+      <div class="dj-main-stat">
+        <div class="dj-main-stat-icon"><i class="bi bi-star"></i></div>
+        <div>
+          <strong>24/7</strong>
+          <span>Your Safety, Always</span>
+          <small>Check. Verify. Apply.</small>
+        </div>
+        <i class="bi bi-arrow-right dj-main-stat-arrow"></i>
       </div>
     </div>
   </div>

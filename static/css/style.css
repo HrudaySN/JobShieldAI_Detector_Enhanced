@@ -856,3 +856,421 @@ footer.site-footer{
   .admin-users-table thead th:nth-child(5),.admin-users-table tbody td:nth-child(5){display:none}
   .admin-detail-identity{align-items:flex-start}
 }
+
+/* ==========================================================================
+   Dream-Job Hero (added for home page "main section" — new classes only,
+   nothing below modifies or overrides any existing selector, so it will
+   not affect other pages that share this stylesheet).
+   ========================================================================== */
+.dj-hero{padding:28px 0 0;}
+.dj-hero-panel{
+  padding:36px 34px 30px;
+  border-radius:26px;
+  background:linear-gradient(160deg,#0b1530,#0a1024 65%,#0c1836);
+  border:1px solid #1c2a52;
+  box-shadow:0 26px 60px rgba(5,10,30,.35);
+  color:#eef1ff;
+}
+.dj-eyebrow{color:#8fb8ff;font-size:11px;font-weight:700;letter-spacing:.1em;}
+.dj-eyebrow i{margin-right:6px;color:var(--teal-400);}
+.dj-title{
+  font-weight:700;
+  font-size:clamp(30px,4vw,44px);
+  line-height:1.18;
+  color:#fff;
+  max-width:520px;
+}
+.dj-title-accent{
+  background:linear-gradient(135deg,#bd60f6,#6556f0 55%,#3487ff);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.dj-sub{color:#a9b4d6;font-size:15.5px;max-width:480px;line-height:1.6;}
+.dj-btn-primary{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:12px 22px;border-radius:999px;border:none;
+  background:linear-gradient(135deg,#bd60f6,#6556f0 58%,#3487ff);
+  color:#fff;font-weight:650;text-decoration:none;
+  box-shadow:0 12px 26px rgba(101,86,240,.35);
+  transition:transform .2s ease, box-shadow .2s ease, filter .2s ease;
+}
+.dj-btn-primary:hover{transform:translateY(-2px);filter:brightness(1.07);color:#fff;}
+.dj-btn-outline{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:11px 22px;border-radius:999px;
+  border:1.5px solid #33447a;background:transparent;
+  color:#eef1ff;font-weight:650;text-decoration:none;
+  transition:background .2s ease, border-color .2s ease;
+}
+.dj-btn-outline:hover{background:rgba(255,255,255,.06);border-color:#4a5da0;color:#fff;}
+
+.dj-visual{position:relative;max-width:440px;margin:0 auto;}
+.dj-visual svg{width:100%;height:auto;display:block;filter:drop-shadow(0 20px 40px rgba(0,0,0,.35));}
+.dj-visual-badge{
+  position:absolute;left:10px;bottom:16px;
+  display:inline-flex;align-items:center;gap:8px;
+  padding:9px 13px;border-radius:12px;
+  background:rgba(10,18,40,.82);border:1px solid #2a3a68;
+  color:#eaf6f2;font-size:11.5px;line-height:1.25;
+  backdrop-filter:blur(8px);
+  animation:float 5s ease-in-out infinite;
+}
+.dj-visual-badge i{color:var(--teal-400);margin-right:2px;}
+.dj-visual-badge strong{color:#fff;}
+
+.dj-stats{margin-top:8px;}
+.dj-stat-card{
+  position:relative;
+  padding:16px 16px 15px;
+  border-radius:16px;
+  background:rgba(255,255,255,.04);
+  border:1px solid #23305c;
+}
+.dj-stat-icon{
+  width:34px;height:34px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#7a5cf0,#3487ff);
+  color:#fff;font-size:15px;margin-bottom:10px;
+}
+.dj-stat-arrow{position:absolute;top:16px;right:15px;color:#5a6aa0;font-size:13px;}
+.dj-stat-num{font-family:'Outfit',sans-serif;font-weight:700;font-size:22px;color:#fff;}
+.dj-stat-label{font-size:12.5px;color:#c3cbe6;font-weight:600;margin-top:1px;}
+.dj-stat-sub{font-size:10.5px;color:#7b87b3;margin-top:2px;}
+
+@media(max-width:991px){
+  .dj-hero-panel{padding:28px 20px 24px;text-align:center;}
+  .dj-title,.dj-sub{max-width:none;margin-left:auto;margin-right:auto;}
+  .dj-hero .d-flex{justify-content:center;}
+  .dj-visual{margin-top:22px;}
+}
+@media(max-width:575px){
+  .dj-hero-panel{padding:24px 16px 20px;border-radius:20px;}
+}
+
+
+/* ==========================================================================
+   JobShield Home — Main Hero v2
+   Scoped exclusively to .dj-main-* so existing pages/components are untouched.
+   Background image: /static/images/jobshield-hero-bg.jpg
+   ========================================================================== */
+
+.dj-main-hero{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  min-height:520px;
+  padding:0 0 22px;
+  color:#fff;
+  background:#07152f;
+}
+
+.dj-main-hero-bg{
+  position:absolute;
+  inset:0;
+  z-index:-2;
+  background-image:url("/static/images/jobshield-hero-bg.jpg");
+  background-size:cover;
+  background-position:center center;
+  transform:scale(1.015);
+}
+
+.dj-main-hero::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background:
+    linear-gradient(90deg,
+      rgba(5,15,37,.97) 0%,
+      rgba(5,15,37,.91) 25%,
+      rgba(5,15,37,.68) 46%,
+      rgba(5,15,37,.30) 72%,
+      rgba(5,15,37,.48) 100%),
+    linear-gradient(180deg,
+      rgba(2,9,24,.25) 0%,
+      rgba(2,9,24,.04) 52%,
+      rgba(2,9,24,.58) 100%);
+}
+
+.dj-main-hero::after{
+  content:"";
+  position:absolute;
+  left:-12%;
+  bottom:-240px;
+  width:620px;
+  height:420px;
+  border-radius:50%;
+  z-index:-1;
+  pointer-events:none;
+  background:radial-gradient(circle,rgba(74,89,255,.22),transparent 68%);
+  filter:blur(18px);
+}
+
+.dj-main-hero .container-xl{
+  position:relative;
+  z-index:1;
+}
+
+.dj-main-hero-content{
+  min-height:405px;
+  display:flex;
+  align-items:center;
+}
+
+.dj-main-hero-copy{
+  width:min(590px,56%);
+  padding:58px 0 40px;
+}
+
+.dj-main-eyebrow{
+  margin-bottom:15px;
+  color:#91a9ff;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+
+.dj-main-eyebrow i{
+  color:#b783ff;
+  margin-right:7px;
+  font-size:13px;
+}
+
+.dj-main-hero h1{
+  margin:0 0 18px;
+  max-width:620px;
+  color:#fff;
+  font-family:'Outfit',sans-serif;
+  font-size:clamp(42px,5.2vw,66px);
+  font-weight:750;
+  letter-spacing:-.045em;
+  line-height:1.05;
+  text-shadow:0 4px 24px rgba(0,0,0,.25);
+}
+
+.dj-main-hero h1 span{
+  color:#7c63ff;
+  background:linear-gradient(135deg,#b96cff 0%,#6557f2 48%,#478bff 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.dj-main-hero-copy > p{
+  margin:0 0 25px;
+  max-width:530px;
+  color:#c2cbe0;
+  font-size:14px;
+  line-height:1.65;
+}
+
+.dj-main-actions{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.dj-main-btn{
+  min-height:42px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:10px 20px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+  transition:transform .2s ease,box-shadow .2s ease,background .2s ease,border-color .2s ease;
+}
+
+.dj-main-btn:hover{
+  transform:translateY(-2px);
+}
+
+.dj-main-btn-primary{
+  color:#fff!important;
+  border:1px solid transparent;
+  background:linear-gradient(135deg,#a95cff,#6557f0 55%,#3988ff);
+  box-shadow:0 12px 28px rgba(89,77,240,.34);
+}
+
+.dj-main-btn-primary:hover{
+  color:#fff!important;
+  box-shadow:0 16px 32px rgba(89,77,240,.46);
+}
+
+.dj-main-btn-outline{
+  color:#edf1ff!important;
+  border:1px solid rgba(130,111,255,.85);
+  background:rgba(5,12,30,.25);
+  backdrop-filter:blur(8px);
+}
+
+.dj-main-btn-outline:hover{
+  color:#fff!important;
+  background:rgba(103,84,230,.14);
+  border-color:#9b87ff;
+}
+
+.dj-main-hero-spacer{
+  flex:1;
+  min-height:350px;
+}
+
+.dj-main-stats{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+  margin:0;
+}
+
+.dj-main-stat{
+  position:relative;
+  min-height:88px;
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:14px 36px 14px 14px;
+  border:1px solid rgba(86,108,173,.30);
+  border-radius:14px;
+  background:rgba(8,21,49,.62);
+  box-shadow:0 12px 30px rgba(0,0,0,.15);
+  backdrop-filter:blur(9px);
+}
+
+.dj-main-stat-icon{
+  width:38px;
+  height:38px;
+  flex:0 0 38px;
+  display:grid;
+  place-items:center;
+  border-radius:11px;
+  color:#fff;
+  font-size:17px;
+  background:linear-gradient(135deg,#6e5bf0,#3987ff);
+  box-shadow:0 7px 18px rgba(75,78,230,.24);
+}
+
+.dj-main-stat:nth-child(2) .dj-main-stat-icon{
+  background:linear-gradient(135deg,#267ff5,#39b9ff);
+}
+
+.dj-main-stat:nth-child(3) .dj-main-stat-icon{
+  background:linear-gradient(135deg,#b35af2,#6c58ed);
+}
+
+.dj-main-stat:nth-child(4) .dj-main-stat-icon{
+  background:linear-gradient(135deg,#00b88a,#36d89d);
+}
+
+.dj-main-stat strong{
+  display:block;
+  color:#f7f9ff;
+  font-family:'Outfit',sans-serif;
+  font-size:17px;
+  line-height:1.05;
+}
+
+.dj-main-stat span{
+  display:block;
+  margin-top:4px;
+  color:#d6dded;
+  font-size:11px;
+  font-weight:650;
+}
+
+.dj-main-stat small{
+  display:block;
+  margin-top:2px;
+  color:#8491b2;
+  font-size:9px;
+}
+
+.dj-main-stat-arrow{
+  position:absolute;
+  top:50%;
+  right:14px;
+  transform:translateY(-50%);
+  color:#7485b3;
+  font-size:12px;
+}
+
+@media(max-width:991px){
+  .dj-main-hero{
+    min-height:auto;
+  }
+
+  .dj-main-hero::before{
+    background:
+      linear-gradient(90deg,rgba(5,15,37,.94),rgba(5,15,37,.76)),
+      linear-gradient(180deg,rgba(2,9,24,.2),rgba(2,9,24,.65));
+  }
+
+  .dj-main-hero-content{
+    min-height:auto;
+  }
+
+  .dj-main-hero-copy{
+    width:100%;
+    max-width:650px;
+    padding:70px 0 48px;
+  }
+
+  .dj-main-hero-spacer{
+    display:none;
+  }
+
+  .dj-main-stats{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+
+@media(max-width:575px){
+  .dj-main-hero-bg{
+    background-position:63% center;
+  }
+
+  .dj-main-hero-copy{
+    padding:48px 0 38px;
+  }
+
+  .dj-main-hero h1{
+    font-size:42px;
+  }
+
+  .dj-main-hero-copy > p{
+    font-size:13px;
+  }
+
+  .dj-desktop-break{
+    display:none;
+  }
+
+  .dj-main-actions{
+    gap:9px;
+  }
+
+  .dj-main-btn{
+    padding:10px 16px;
+    font-size:11px;
+  }
+
+  .dj-main-stats{
+    grid-template-columns:1fr;
+  }
+
+  .dj-main-stat{
+    min-height:76px;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .dj-main-btn{
+    transition:none;
+  }
+}
