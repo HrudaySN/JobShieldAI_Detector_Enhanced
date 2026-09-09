@@ -1,32 +1,4 @@
-/* ==========================================================================
-   FakeJob Detector — Shared front-end interactions
-   ========================================================================== */
-
 (function () {
-  "use strict";
-
-  /* ---------- Theme toggle (light/dark) ---------- */
-  const root = document.documentElement;
-  const themeBtn = document.getElementById("themeToggle");
-  const storedTheme = localStorage.getItem("fjd-theme") || "dark";
-  root.setAttribute("data-theme", storedTheme);
-  updateThemeIcon(storedTheme);
-
-  if (themeBtn) {
-    themeBtn.addEventListener("click", function () {
-      const current = root.getAttribute("data-theme") === "dark" ? "dark" : "light";
-      const next = current === "dark" ? "light" : "dark";
-      root.setAttribute("data-theme", next);
-      localStorage.setItem("fjd-theme", next);
-      updateThemeIcon(next);
-    });
-  }
-
-  function updateThemeIcon(theme) {
-    if (!themeBtn) return;
-    themeBtn.innerHTML =
-      theme === "dark" ? '<i class="bi bi-sun"></i>' : '<i class="bi bi-moon-stars"></i>';
-  }
 
   const sidebarToggle = document.getElementById("sidebarToggle");
   if (sidebarToggle) sidebarToggle.addEventListener("click", () => document.body.classList.toggle("sidebar-open"));
@@ -210,15 +182,46 @@
 
   async function runJobAnalysis() {
     const description = document.getElementById("jobDescription");
-    if (!description || !description.value.trim()) {
-      showToast("Paste a job description first.");
-      return;
-    }
+    const fileInput = document.getElementById("jobFileInput");
     const button = analyzeBtn;
     const resultEmpty = document.getElementById("resultEmpty");
     const resultCard = document.getElementById("resultCard");
     const progressCard = document.getElementById("scanProgress");
     const original = button.innerHTML;
+    let text = description?.value.trim() || "";
+
+    // If a file is selected, extract it first. This keeps Paste and Upload on the same detector path.
+    if (!text && fileInput?.files?.[0]) {
+      button.disabled = true;
+      button.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Reading file…';
+      try {
+        const formData = new FormData();
+        formData.append("file", fileInput.files[0]);
+        const extractResponse = await fetch("/api/extract-job-file", { method: "POST", body: formData });
+        const extracted = await extractResponse.json();
+        if (!extractResponse.ok) throw new Error(extracted.error || "Could not read the selected file.");
+        text = (extracted.text || "").trim();
+        if (description) {
+          description.value = text;
+          description.dispatchEvent(new Event("input", { bubbles: true }));
+        }
+      } catch (error) {
+        button.disabled = false;
+        button.innerHTML = original;
+        showToast(error.message);
+        return;
+      }
+    }
+
+    if (!text) {
+      showToast("Paste a job description or select a job file first.");
+      return;
+    }
+    if (text.split(/\s+/).filter(Boolean).length < 4) {
+      showToast("Please provide a little more job information before scanning.");
+      return;
+    }
+
     button.disabled = true;
     button.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Scanning…';
     if (resultCard) resultCard.style.display = "none";
@@ -226,7 +229,7 @@
     startScanProgress(progressCard);
 
     const payload = {
-      text: description.value,
+      text,
       job_url: document.getElementById("jobUrl")?.value.trim() || "",
       recruiter_email: document.getElementById("recruiterEmail")?.value.trim() || "",
       company_website: document.getElementById("companyWebsite")?.value.trim() || "",
@@ -372,6 +375,18 @@
     node.textContent = value == null ? "" : String(value);
     return node.innerHTML;
   }
+
+  /* ---------- Detector FAQ accordion ---------- */
+  document.querySelectorAll(".faq-item").forEach((item) => {
+    item.addEventListener("click", () => {
+      const answer = item.nextElementSibling;
+      if (!answer || !answer.classList.contains("faq-answer")) return;
+      const wasOpen = answer.classList.contains("open");
+      document.querySelectorAll(".faq-item.open").forEach((el) => el.classList.remove("open"));
+      document.querySelectorAll(".faq-answer.open").forEach((el) => el.classList.remove("open"));
+      if (!wasOpen) { item.classList.add("open"); answer.classList.add("open"); }
+    });
+  });
 
   /* ---------- Resume screening simulation ---------- */
   const screenBtn = document.getElementById("screenResumeBtn");

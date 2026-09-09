@@ -21,6 +21,56 @@ def detector():
     return render_template("detector.html", active_page="detector", training_examples=model.examples)
 
 
+@main_bp.route("/api/extract-job-file", methods=["POST"])
+@login_required
+def extract_job_file():
+    file = request.files.get("file")
+    if not file or not file.filename:
+        return jsonify({"error": "Please select a job file."}), 400
+
+    filename = file.filename.lower()
+    allowed = (".txt", ".pdf", ".docx", ".png", ".jpg", ".jpeg", ".webp")
+    if not filename.endswith(allowed):
+        return jsonify({"error": "Supported files: TXT, PDF, DOCX, PNG, JPG, JPEG or WEBP."}), 400
+
+    raw = file.read()
+    if len(raw) > 5 * 1024 * 1024:
+        return jsonify({"error": "File is larger than the 5MB limit."}), 400
+
+    try:
+        if filename.endswith(".txt"):
+            text = raw.decode("utf-8", errors="ignore")
+        elif filename.endswith(".pdf"):
+            from PyPDF2 import PdfReader
+            import io
+            reader = PdfReader(io.BytesIO(raw))
+            text = "\n".join(page.extract_text() or "" for page in reader.pages)
+        elif filename.endswith(".docx"):
+            from docx import Document
+            import io
+            doc = Document(io.BytesIO(raw))
+            text = "\n".join(p.text for p in doc.paragraphs)
+            for table in doc.tables:
+                for row in table.rows:
+                    text += "\n" + " | ".join(cell.text for cell in row.cells)
+        else:
+            try:
+                from PIL import Image
+                import io
+                import pytesseract
+                image = Image.open(io.BytesIO(raw))
+                text = pytesseract.image_to_string(image)
+            except Exception as exc:
+                return jsonify({"error": "Image text extraction is unavailable. Install Tesseract OCR and try again, or paste the job description."}), 422
+
+        text = "\n".join(line.strip() for line in text.splitlines() if line.strip()).strip()
+        if len(text.split()) < 4:
+            return jsonify({"error": "The selected file did not contain enough readable job text. Try a clearer file or paste the description."}), 422
+        return jsonify({"text": text[:5000], "filename": file.filename})
+    except Exception as exc:
+        return jsonify({"error": f"Could not read the selected file: {exc}"}), 422
+
+
 @main_bp.route("/api/analyze-job", methods=["POST"])
 @login_required
 def analyze_job():
