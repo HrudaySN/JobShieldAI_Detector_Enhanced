@@ -35,10 +35,6 @@
         <a class="{{ 'active' if active_page=='resume' }}" href="{{ url_for('main.resume_screen') }}"><i class="bi bi-file-earmark-person"></i> Resume Screen</a>
         <a class="{{ 'active' if active_page=='dashboard' }}" href="{{ url_for('main.dashboard') }}"><i class="bi bi-grid-1x2"></i> Dashboard</a>
         <a class="{{ 'active' if active_page=='history' }}" href="{{ url_for('main.history') }}"><i class="bi bi-clock-history"></i> History</a>
-        <a class="{{ 'active' if active_page=='profile' }}" href="{{ url_for('profile.view_profile') }}"><i class="bi bi-person-circle"></i> Profile</a>
-        {% if current_user.is_authenticated and current_user.is_admin %}
-        <a class="{{ 'active' if active_page=='admin' }}" href="{{ url_for('admin.dashboard') }}"><i class="bi bi-shield-lock"></i> Admin Panel</a>
-        {% endif %}
         <a class="{{ 'active' if active_page=='support' }}" href="{{ url_for('main.support') }}"><i class="bi bi-life-preserver"></i> About / Help</a>
     </nav>
     <div class="sidebar-safety-card"><i class="bi bi-shield-lock-fill"></i><strong>Private by design</strong><span>Your checks stay in your workspace.</span></div>
@@ -49,14 +45,39 @@
     <button class="sidebar-toggle d-lg-none" type="button" id="sidebarToggle" aria-label="Open navigation"><i class="bi bi-list"></i></button>
     <div class="topbar-context"><span class="live-dot"></span> JOB SAFETY WORKSPACE</div>
     <div class="topbar-actions">
-        <button class="icon-btn" id="themeToggle" title="Toggle colour mode"><i class="bi bi-moon-stars"></i></button>
+
         {% if current_user.is_authenticated %}
         <div class="dropdown">
             <button class="profile-trigger" type="button" data-bs-toggle="dropdown" aria-expanded="false"><span class="profile-avatar">{{ (current_user.username or current_user.email)[0]|upper }}</span><span class="profile-copy"><strong>{{ current_user.username or current_user.email.split('@')[0] }}</strong><small>Protected account</small></span><i class="bi bi-chevron-down"></i></button>
             <ul class="dropdown-menu dropdown-menu-end profile-menu">
                 <li><div class="profile-menu-head"><span class="profile-avatar">{{ (current_user.username or current_user.email)[0]|upper }}</span><div><strong>{{ current_user.username or 'JobShield member' }}</strong><small>{{ current_user.email }}</small></div></div></li><li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="{{ url_for('main.dashboard') }}"><i class="bi bi-grid-1x2"></i> My Dashboard</a></li><li><a class="dropdown-item" href="{{ url_for('main.history') }}"><i class="bi bi-clock-history"></i> My History</a></li><li><a class="dropdown-item" href="{{ url_for('profile.view_profile') }}"><i class="bi bi-person-circle"></i> My Profile</a></li>{% if current_user.is_admin %}<li><a class="dropdown-item" href="{{ url_for('admin.dashboard') }}"><i class="bi bi-shield-lock"></i> Admin Panel</a></li>{% endif %}<li><hr class="dropdown-divider"></li><li><a class="dropdown-item logout-item" href="{{ url_for('auth.logout') }}"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
-            </ul>
+                <li>
+    <a class="dropdown-item" href="{{ url_for('profile.view_profile') }}">
+        <i class="bi bi-person"></i> My Profile
+    </a>
+</li>
+<li>
+    <a class="dropdown-item" href="{{ url_for('main.dashboard') }}">
+        <i class="bi bi-grid-1x2"></i> My Dashboard
+    </a>
+</li>
+<li>
+    <a class="dropdown-item" href="{{ url_for('main.history') }}">
+        <i class="bi bi-clock-history"></i> My History
+    </a>
+</li>
+<li>
+    <a class="dropdown-item" href="{{ url_for('admin.dashboard') }}">
+        <i class="bi bi-shield-lock"></i> Admin
+    </a>
+</li>
+<li><hr class="dropdown-divider"></li>
+<li>
+    <a class="dropdown-item logout-item" href="{{ url_for('auth.logout') }}">
+        <i class="bi bi-box-arrow-right"></i> Logout
+    </a>
+</li>
+</ul>
         </div>
         {% else %}<a class="nav-login" href="{{ url_for('auth.login') }}"><i class="bi bi-person-circle"></i> Login</a>{% endif %}
     </div>
@@ -101,11 +122,6 @@
             </ul>
 
             <ul class="navbar-nav align-items-lg-center gap-2 ms-lg-2">
-                <li class="nav-item">
-                    <button class="icon-btn" id="themeToggle" title="Toggle light / dark theme">
-                        <i class="bi bi-moon-stars"></i>
-                    </button>
-                </li>
 
                 {% if current_user.is_authenticated %}
                 <li class="nav-item dropdown">
@@ -117,13 +133,27 @@
                     <ul class="dropdown-menu dropdown-menu-end profile-menu">
                         <li><div class="profile-menu-head"><span class="profile-avatar">{{ (current_user.username or current_user.email)[0]|upper }}</span><div><strong>{{ current_user.username or 'JobShield member' }}</strong><small>{{ current_user.email }}</small></div></div></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{{ url_for('main.dashboard') }}"><i class="bi bi-grid-1x2"></i> My Dashboard</a></li>
-                        <li><a class="dropdown-item" href="{{ url_for('main.history') }}"><i class="bi bi-clock-history"></i> My History</a></li>
-                        <li><a class="dropdown-item" href="{{ url_for('profile.view_profile') }}"><i class="bi bi-person-circle"></i> My Profile</a></li>
-                        {% if current_user.is_admin %}
-                        <li><a class="dropdown-item" href="{{ url_for('admin.dashboard') }}"><i class="bi bi-shield-lock"></i> Admin Panel</a></li>
-                        {% endif %}
-                        <li><hr class="dropdown-divider"></li>
+                        <li>
+    <a class="dropdown-item" href="{{ url_for('profile.view_profile') }}">
+        <i class="bi bi-person"></i> My Profile
+    </a>
+</li>
+<li>
+    <a class="dropdown-item" href="{{ url_for('main.dashboard') }}">
+        <i class="bi bi-grid-1x2"></i> My Dashboard
+    </a>
+</li>
+<li>
+    <a class="dropdown-item" href="{{ url_for('main.history') }}">
+        <i class="bi bi-clock-history"></i> My History
+    </a>
+</li>
+<li>
+    <a class="dropdown-item" href="{{ url_for('admin.dashboard') }}">
+        <i class="bi bi-shield-lock"></i> Admin
+    </a>
+</li>
+<li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item logout-item" href="{{ url_for('auth.logout') }}"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
                     </ul>
                 </li>
