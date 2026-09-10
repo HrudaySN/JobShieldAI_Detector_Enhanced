@@ -5,7 +5,9 @@ from flask_login import current_user, login_required
 
 from extensions import db
 from job_analyzer import model
-from models import JobAnalysis
+from resume_analyzer import model as resume_model
+from file_processor import extract_text as extract_resume_text
+from models import JobAnalysis, ResumeScreening
 
 main_bp = Blueprint("main", __name__)
 
@@ -124,6 +126,73 @@ def get_analysis(analysis_id):
 @login_required
 def resume_screen():
     return render_template("resume.html", active_page="resume")
+
+@main_bp.route("/api/extract-resume-file", methods=["POST"])
+@login_required
+def extract_resume_file():
+    file = request.files.get("file")
+    if not file or not file.filename:
+        return jsonify({"error": "Please select a resume file."}), 400
+
+    raw_len = len(file.read())
+    file.seek(0)
+    if raw_len > 5 * 1024 * 1024:
+        return jsonify({"error": "File is larger than the 5MB limit."}), 400
+
+    try:
+        text = extract_resume_text(file)
+        return jsonify({"text": text[:8000], "filename": file.filename})
+    except ValueError as error:
+        return jsonify({"error": str(error)}), 422
+    except Exception:
+        return jsonify({"error": "Could not read that file. Please try a PDF or DOCX resume."}), 422
+
+
+@main_bp.route("/api/screen-resume", methods=["POST"])
+@login_required
+def screen_resume():
+    payload = request.get_json(silent=True) or {}
+    try:
+        result = resume_model.analyze(payload.get("text", ""), payload.get("target_role"))
+        return jsonify(result)
+    except ValueError as error:
+        return jsonify({"error": str(error)}), 400
+
+
+@main_bp.route("/api/save-resume-screening", methods=["POST"])
+@login_required
+def save_resume_screening():
+    payload = request.get_json(silent=True) or {}
+    result = payload.get("result") or {}
+    text = (payload.get("text") or "").strip()
+    if not text or not result:
+        return jsonify({"error": "Nothing to save yet."}), 400
+    record = ResumeScreening(
+        user_id=current_user.id,
+        resume_text=text[:10000],
+        filename=(payload.get("filename") or "")[:255] or None,
+        target_role=(result.get("target_role") or "")[:200] or None,
+        fit_score=int(result.get("fit_score", 0)),
+        skills_detected=json.dumps(result.get("skills_detected", [])),
+        skills_missing=json.dumps(result.get("skills_missing", [])),
+        result_json=json.dumps(result),
+    )
+    db.session.add(record)
+    db.session.commit()
+    return jsonify({"ok": True, "id": record.id})
+
+
+@main_bp.route("/api/resume-screening/<int:screening_id>")
+@login_required
+def get_resume_screening(screening_id):
+    record = ResumeScreening.query.filter_by(id=screening_id, user_id=current_user.id).first_or_404()
+    return jsonify({
+        "id": record.id,
+        "text": record.resume_text,
+        "filename": record.filename,
+        "created_at": record.created_at.isoformat(),
+        "result": json.loads(record.result_json),
+    })
 
 
 @main_bp.route("/dashboard")
