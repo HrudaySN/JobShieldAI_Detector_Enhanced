@@ -58,3 +58,18 @@ class JobAnalysis(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow, index=True)
 
     user = db.relationship("User", backref=db.backref("job_analyses", lazy="dynamic"))
+class ResumeScreening(db.Model):
+    __tablename__ = "resume_screenings"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False, index=True)
+    resume_text = db.Column(db.Text, nullable=False)
+    filename = db.Column(db.String(255), nullable=True)
+    target_role = db.Column(db.String(200), nullable=True)
+    fit_score = db.Column(db.Integer, nullable=False)
+    skills_detected = db.Column(db.Text, nullable=False)   # JSON list, stored as text
+    skills_missing = db.Column(db.Text, nullable=False)    # JSON list, stored as text
+    result_json = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, index=True)
+
+    user = db.relationship("User", backref=db.backref("resume_screenings", lazy="dynamic"))
