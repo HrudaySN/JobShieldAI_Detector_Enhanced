@@ -1,118 +1,344 @@
 {% extends "base.html" %}
 {% block title %}AI Resume Screening | JobShield AI{% endblock %}
 {% block content %}
-<div class="container-xl py-5">
+<div class="container-xl py-5 detector-page">
 
-  <div class="mb-4">
-    <h2 class="section-title mb-1">AI Resume Screening</h2>
-    <p class="section-sub mb-0">Upload a resume and get AI-based job recommendations and skill suggestions.</p>
+  <div class="detector-hero mb-4">
+    <div>
+      <div class="eyebrow"><i class="bi bi-file-earmark-person"></i> RESUME SAFETY SCANNER</div>
+      <h2 class="section-title mb-1">How well does your resume fit the role?</h2>
+      <p class="section-sub mb-0">Paste your resume or upload a PDF/DOCX file, pick a target role, and get a clear fit score with skill gaps.</p>
+    </div>
+    <div class="scan-trust"><i class="bi bi-lock-fill"></i> Your resume stays private</div>
   </div>
 
   <div class="row g-4">
-    <div class="col-lg-6">
-      <div class="card-surface p-4">
-        <h6 class="mb-3">Upload Resume</h6>
-        <div class="upload-zone" id="uploadZoneResume" data-input="resumeFileInput">
-          <div class="upload-icon"><i class="bi bi-cloud-arrow-up"></i></div>
-          <p class="mb-1 fw-semibold">Drag & drop your resume here</p>
-          <p class="text-muted small mb-0">or click to browse — PDF, DOCX, image (Max 5MB)</p>
-        </div>
-        <input type="file" id="resumeFileInput" accept="image/*,.pdf,.doc,.docx" hidden
-               data-preview="resumeFilePreview" data-zone="uploadZoneResume" data-filename="resumeFileName"
-               data-change-btn="resumeChangeBtn">
-        <div id="resumeFilePreview" class="mt-3" style="display:none;"></div>
-        <div class="d-flex justify-content-between align-items-center mt-2">
-          <span class="text-muted small" id="resumeFileName"></span>
-          <button class="btn-outline-teal btn-sm py-1" id="resumeChangeBtn" style="display:none;" data-remove-upload="resumeFileInput">
-            <i class="bi bi-arrow-repeat"></i> Upload different file
-          </button>
+    <div class="col-lg-7">
+
+      <div class="card-surface p-4 detector-card">
+        <div class="section-kicker"><span class="step-number">01</span><div><h5 class="mb-0">Your resume</h5><p class="small text-muted mb-0">Paste the text, or upload a file.</p></div></div>
+
+        <div class="tab-pill-group mb-3" data-tab-group="resumeInput">
+          <button class="tab-pill active" data-tab-target="paste">Paste Resume Text</button>
+          <button class="tab-pill" data-tab-target="upload">Upload File</button>
         </div>
 
-        <h6 class="mt-4 mb-2">Preferred Job Role <span class="text-muted small fw-normal">(optional)</span></h6>
-        <input type="text" class="form-control-teal" placeholder="e.g. Frontend Developer, Data Analyst">
+        <div data-tab-panel="resumeInput" data-panel-name="paste">
+          <textarea id="resumeText" class="jd-textarea" maxlength="8000" data-max="8000" data-counter="resumeCounter" placeholder="Paste your resume text here… include your skills, experience, and education."></textarea>
+          <div class="char-count" id="resumeCounter">0 / 8000</div>
+        </div>
 
-        <button class="btn-teal w-100 justify-content-center mt-4" id="screenResumeBtn">
-          <i class="bi bi-stars"></i> Screen Resume
-        </button>
+        <div data-tab-panel="resumeInput" data-panel-name="upload" style="display:none;">
+          <div class="upload-zone" id="uploadZoneResume" data-input="resumeFileInput">
+            <div class="upload-icon"><i class="bi bi-cloud-arrow-up"></i></div>
+            <p class="mb-1 fw-semibold">Drag &amp; drop your resume here</p>
+            <p class="text-muted small mb-0">or click to browse — PDF or DOCX (Max 5MB)</p>
+          </div>
+          <input type="file" id="resumeFileInput" accept=".pdf,.docx" hidden>
+          <div id="resumeFileStatus" class="mt-3 small text-muted" style="display:none;"></div>
+          <div class="d-flex justify-content-between align-items-center mt-2">
+            <span class="text-muted small" id="resumeFileName"></span>
+            <button class="btn-outline-teal btn-sm py-1" id="resumeChangeBtn" style="display:none;" type="button">
+              <i class="bi bi-arrow-repeat"></i> Upload different file
+            </button>
+          </div>
+        </div>
       </div>
+
+      <div class="card-surface p-4 mt-4 detector-card">
+        <div class="section-kicker"><span class="step-number">02</span><div><h5 class="mb-0">Target role</h5><p class="small text-muted mb-0">Optional — leave blank and we'll suggest your best-fitting role.</p></div></div>
+        <select id="targetRole" class="form-control-teal">
+          <option value="">Auto-detect best fit</option>
+          <option>Data Analyst</option>
+          <option>Data Scientist</option>
+          <option>Frontend Developer</option>
+          <option>Backend Developer</option>
+          <option>Business Intelligence Analyst</option>
+          <option>DevOps Engineer</option>
+          <option>Project Manager</option>
+          <option>Digital Marketing Specialist</option>
+        </select>
+      </div>
+
+      <button class="btn-teal w-100 justify-content-center mt-4 scan-button" id="screenResumeBtn"><i class="bi bi-stars"></i> Screen Resume</button>
     </div>
 
-    <div class="col-lg-6">
-      <div class="card-surface p-4">
-        <h6 class="mb-3">Match Overview</h6>
-        <div class="result-placeholder" id="resumeEmpty">
+    <div class="col-lg-5">
+
+      <div class="card-surface p-4 scan-progress-card" id="scanProgress" style="display:none;">
+        <div class="d-flex justify-content-between align-items-center mb-3"><div><h5 class="mb-1">Screening your resume</h5><p class="text-muted small mb-0" id="scanProgressLabel">Reading content…</p></div><span class="scan-percent" id="scanPercent">0%</span></div>
+        <div class="scan-line"><div id="scanProgressBar"></div></div>
+      </div>
+
+      <div class="card-surface p-4 mb-4" id="resultEmpty">
+        <h5 class="mb-3">Match Overview</h5>
+        <div class="result-placeholder">
           <div class="circle-icon"><i class="bi bi-file-earmark-person"></i></div>
           <div class="fw-semibold">No resume screened yet</div>
-          <div class="text-muted small">Upload your resume to see skills, match score, and job matches.</div>
+          <div class="text-muted small">Add your resume and run the screen to see your fit score.</div>
+        </div>
+      </div>
+
+      <div class="verdict-card mb-4" id="resultCard" style="display:none;">
+        <div class="result-top">
+          <div class="risk-gauge" id="fitGauge"><i class="bi bi-graph-up"></i><strong id="fitScoreLarge">--</strong><small>fit score</small></div>
+          <div class="result-summary">
+            <div class="d-flex align-items-center justify-content-between gap-2"><span class="risk-level-label">TARGET ROLE</span><span class="verdict-badge genuine" id="roleBadge"><i class="bi bi-briefcase-fill"></i> <span id="roleText">--</span></span></div>
+            <h4 id="roleSuggestedNote" class="mt-2 mb-1 small text-muted" style="display:none;">Suggested based on your skills</h4>
+            <div class="mt-3 d-flex justify-content-between"><span class="small text-muted">Fit score</span><strong class="small" id="fitScoreText">--%</strong></div>
+            <div class="progress-wrap"><div class="progress-fill" id="fitProgress" style="width:0%"></div></div>
+          </div>
         </div>
 
-        <div id="resumeResults" style="display:none;">
-          <div class="d-flex justify-content-between mb-1">
-            <span class="small text-muted">Overall Job-Fit Score</span>
-            <span class="small fw-bold">81%</span>
-          </div>
-          <div class="progress-wrap mb-3"><div class="progress-fill" data-value="81" style="width:0%"></div></div>
+        <div class="result-section">
+          <div class="result-section-title"><i class="bi bi-check-circle"></i><span>Skills detected</span></div>
+          <div id="skillsDetected"></div>
+        </div>
 
-          <h6 class="mb-2 small text-uppercase text-muted">Skills detected</h6>
-          <div class="mb-3">
-            <span class="skill-chip">Python</span>
-            <span class="skill-chip">SQL</span>
-            <span class="skill-chip">Data Analysis</span>
-            <span class="skill-chip">Power BI</span>
-            <span class="skill-chip">Communication</span>
-          </div>
+        <div class="result-section next-steps">
+          <div class="result-section-title"><i class="bi bi-lightbulb"></i><span>Skill gaps for this role</span></div>
+          <div id="skillsMissing"></div>
+        </div>
 
-          <h6 class="mb-2 small text-uppercase text-muted">Suggested skills to earn more</h6>
-          <div>
-            <span class="skill-chip"><i class="bi bi-arrow-up-right"></i> TensorFlow</span>
-            <span class="skill-chip"><i class="bi bi-arrow-up-right"></i> Cloud (AWS/GCP)</span>
-            <span class="skill-chip"><i class="bi bi-arrow-up-right"></i> Machine Learning</span>
-          </div>
+        <div class="result-footer">
+          <div class="small text-muted"><i class="bi bi-cpu me-1"></i><span id="modelInfo">Explainable keyword matcher</span></div>
+          <button class="btn-outline-teal btn-sm" id="saveReportBtn"><i class="bi bi-bookmark"></i> Save to History</button>
+          <button class="btn-outline-teal btn-sm" id="downloadReportBtn"><i class="bi bi-download"></i> Download Report</button>
         </div>
       </div>
     </div>
   </div>
 
-  <div id="recommendedJobsWrap" class="mt-4">
-    <h5 class="mb-3">Recommended Jobs For You</h5>
-    <div class="row g-3">
-      <div class="col-md-4">
-        <div class="job-suggest-card h-100">
-          <div class="d-flex justify-content-between align-items-start">
-            <div>
-              <div class="fw-bold">Data Analyst</div>
-              <div class="text-muted small">Techstar Solutions · Remote</div>
-            </div>
-            <span class="match">92%</span>
-          </div>
-          <p class="small text-muted mt-2 mb-0">Strong match on SQL, Python and data visualization skills.</p>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="job-suggest-card h-100">
-          <div class="d-flex justify-content-between align-items-start">
-            <div>
-              <div class="fw-bold">Business Intelligence Analyst</div>
-              <div class="text-muted small">Northbridge Corp · Bangalore</div>
-            </div>
-            <span class="match">85%</span>
-          </div>
-          <p class="small text-muted mt-2 mb-0">Power BI and reporting experience aligns closely with this role.</p>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="job-suggest-card h-100">
-          <div class="d-flex justify-content-between align-items-start">
-            <div>
-              <div class="fw-bold">Junior Data Scientist</div>
-              <div class="text-muted small">Vertex Analytics · Hybrid</div>
-            </div>
-            <span class="match">76%</span>
-          </div>
-          <p class="small text-muted mt-2 mb-0">Adding ML skills would boost your fit for this role significantly.</p>
-        </div>
-      </div>
-    </div>
+  <div id="recommendedJobsWrap" class="mt-4" style="display:none;">
+    <h5 class="mb-3">Recommended Roles For You</h5>
+    <div class="row g-3" id="recommendedJobsRow"></div>
   </div>
+
 </div>
+{% endblock %}
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const textarea = document.getElementById("resumeText");
+  const counter = document.getElementById("resumeCounter");
+  const fileInput = document.getElementById("resumeFileInput");
+  const uploadZone = document.getElementById("uploadZoneResume");
+  const fileStatus = document.getElementById("resumeFileStatus");
+  const fileNameLabel = document.getElementById("resumeFileName");
+  const changeBtn = document.getElementById("resumeChangeBtn");
+  const screenBtn = document.getElementById("screenResumeBtn");
+  const targetRoleSelect = document.getElementById("targetRole");
+
+  const scanProgress = document.getElementById("scanProgress");
+  const scanBar = document.getElementById("scanProgressBar");
+  const scanPercent = document.getElementById("scanPercent");
+  const scanLabel = document.getElementById("scanProgressLabel");
+  const resultEmpty = document.getElementById("resultEmpty");
+  const resultCard = document.getElementById("resultCard");
+  const recWrap = document.getElementById("recommendedJobsWrap");
+  const recRow = document.getElementById("recommendedJobsRow");
+
+  let lastResult = null;
+  let lastText = "";
+  let lastFilename = null;
+
+  textarea.addEventListener("input", () => {
+    counter.textContent = `${textarea.value.length} / 8000`;
+  });
+
+  document.querySelectorAll('[data-tab-group="resumeInput"] .tab-pill').forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll('[data-tab-group="resumeInput"] .tab-pill').forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      const target = btn.dataset.tabTarget;
+      document.querySelectorAll('[data-tab-panel="resumeInput"]').forEach(panel => {
+        panel.style.display = panel.dataset.panelName === target ? "" : "none";
+      });
+    });
+  });
+
+  uploadZone.addEventListener("click", () => fileInput.click());
+  uploadZone.addEventListener("dragover", e => { e.preventDefault(); uploadZone.classList.add("dragging"); });
+  uploadZone.addEventListener("dragleave", () => uploadZone.classList.remove("dragging"));
+  uploadZone.addEventListener("drop", e => {
+    e.preventDefault();
+    uploadZone.classList.remove("dragging");
+    if (e.dataTransfer.files.length) {
+      fileInput.files = e.dataTransfer.files;
+      handleFile(fileInput.files[0]);
+    }
+  });
+  fileInput.addEventListener("change", () => {
+    if (fileInput.files.length) handleFile(fileInput.files[0]);
+  });
+  changeBtn.addEventListener("click", () => {
+    fileInput.value = "";
+    fileNameLabel.textContent = "";
+    changeBtn.style.display = "none";
+    fileStatus.style.display = "none";
+    lastText = "";
+    lastFilename = null;
+  });
+
+  async function handleFile(file) {
+    fileStatus.style.display = "";
+    fileStatus.textContent = "Reading file…";
+    fileNameLabel.textContent = file.name;
+    changeBtn.style.display = "";
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await fetch("/api/extract-resume-file", { method: "POST", body: formData });
+      const data = await response.json();
+      if (!response.ok) {
+        fileStatus.textContent = data.error || "Could not read that file.";
+        lastText = "";
+        return;
+      }
+      lastText = data.text;
+      lastFilename = data.filename;
+      fileStatus.textContent = `Extracted ${data.text.length.toLocaleString()} characters from ${data.filename}.`;
+    } catch (err) {
+      fileStatus.textContent = "Something went wrong reading that file.";
+      lastText = "";
+    }
+  }
+
+  function currentResumeText() {
+    const activePanel = document.querySelector('[data-tab-panel="resumeInput"][style=""]') ||
+                         document.querySelector('[data-tab-panel="resumeInput"]:not([style*="none"])');
+    const activeName = activePanel ? activePanel.dataset.panelName : "paste";
+    if (activeName === "upload") {
+      lastFilename = lastFilename || null;
+      return lastText;
+    }
+    lastFilename = null;
+    return textarea.value.trim();
+  }
+
+  function animateScan(callback) {
+    resultEmpty.style.display = "none";
+    resultCard.style.display = "none";
+    recWrap.style.display = "none";
+    scanProgress.style.display = "";
+    let pct = 0;
+    const labels = ["Reading resume content…", "Matching skills…", "Scoring fit…", "Preparing suggestions…"];
+    const interval = setInterval(() => {
+      pct = Math.min(95, pct + 12);
+      scanBar.style.width = pct + "%";
+      scanPercent.textContent = pct + "%";
+      scanLabel.textContent = labels[Math.min(labels.length - 1, Math.floor(pct / 25))];
+    }, 180);
+
+    callback().finally(() => {
+      clearInterval(interval);
+      scanBar.style.width = "100%";
+      scanPercent.textContent = "100%";
+      setTimeout(() => { scanProgress.style.display = "none"; }, 300);
+    });
+  }
+
+  screenBtn.addEventListener("click", () => {
+    const text = currentResumeText();
+    if (!text || text.split(/\s+/).length < 10) {
+      alert("Please add more of your resume (paste text or upload a file) before screening.");
+      return;
+    }
+    lastText = text;
+
+    animateScan(async () => {
+      try {
+        const response = await fetch("/api/screen-resume", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text, target_role: targetRoleSelect.value }),
+        });
+        const data = await response.json();
+        if (!response.ok) {
+          alert(data.error || "Could not screen this resume.");
+          return;
+        }
+        lastResult = data;
+        renderResult(data);
+      } catch (err) {
+        alert("Something went wrong screening the resume.");
+      }
+    });
+  });
+
+  function renderResult(data) {
+    resultCard.style.display = "";
+    document.getElementById("fitScoreLarge").textContent = data.fit_score;
+    document.getElementById("fitScoreText").textContent = data.fit_score + "%";
+    document.getElementById("fitProgress").style.width = data.fit_score + "%";
+    document.getElementById("roleText").textContent = data.target_role || "—";
+    document.getElementById("roleSuggestedNote").style.display = data.role_was_suggested ? "" : "none";
+
+    const detectedWrap = document.getElementById("skillsDetected");
+    detectedWrap.innerHTML = data.skills_detected.length
+      ? data.skills_detected.map(s => `<span class="skill-chip">${s}</span>`).join("")
+      : '<p class="text-muted small mb-0">No recognized skills found — try adding a skills section.</p>';
+
+    const missingWrap = document.getElementById("skillsMissing");
+    missingWrap.innerHTML = data.skills_missing.length
+      ? data.skills_missing.map(s => `<span class="skill-chip"><i class="bi bi-arrow-up-right"></i> ${s}</span>`).join("")
+      : '<p class="text-muted small mb-0">You already cover every skill this role looks for.</p>';
+
+    recWrap.style.display = "";
+    recRow.innerHTML = data.recommended_jobs.map(job => `
+      <div class="col-md-4">
+        <div class="job-suggest-card h-100">
+          <div class="d-flex justify-content-between align-items-start">
+            <div class="fw-bold">${job.role}</div>
+            <span class="match">${job.match}%</span>
+          </div>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  document.getElementById("saveReportBtn").addEventListener("click", async () => {
+    if (!lastResult || !lastText) return;
+    try {
+      const response = await fetch("/api/save-resume-screening", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: lastText, filename: lastFilename, result: lastResult }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        alert("Saved to your history.");
+      } else {
+        alert(data.error || "Could not save this screening.");
+      }
+    } catch (err) {
+      alert("Something went wrong saving this screening.");
+    }
+  });
+
+  document.getElementById("downloadReportBtn").addEventListener("click", () => {
+    if (!lastResult) return;
+    const lines = [
+      "JobShield AI — Resume Screening Report",
+      `Target role: ${lastResult.target_role}`,
+      `Fit score: ${lastResult.fit_score}%`,
+      "",
+      "Skills detected:",
+      ...lastResult.skills_detected.map(s => `- ${s}`),
+      "",
+      "Skill gaps:",
+      ...lastResult.skills_missing.map(s => `- ${s}`),
+    ];
+    const blob = new Blob([lines.join("\n")], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "jobshield-resume-report.txt";
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+});
+</script>
 {% endblock %}

@@ -3,21 +3,21 @@
 from __future__ import annotations
 
 import re
-from collections import Counter
-
-TOKEN_RE = re.compile(r"[a-zA-Z][a-zA-Z+#.]{1,}")
 
 # Master skills list, grouped loosely by domain. Matching is case-insensitive
-# and looks for these as whole words/phrases inside the resume text.
+# and looks for these as whole words/phrases inside the resume text. A few
+# entries include common no-space variants (e.g. "reactjs") since resumes
+# often write framework names without a separating space.
 SKILLS = [
     "python", "java", "javascript", "typescript", "c++", "c#", "sql", "html", "css",
-    "react", "angular", "vue", "node.js", "flask", "django", "spring", "rest api",
-    "pandas", "numpy", "scikit-learn", "tensorflow", "pytorch", "machine learning",
-    "deep learning", "nlp", "data analysis", "data visualization", "power bi",
-    "tableau", "excel", "statistics", "aws", "azure", "gcp", "docker", "kubernetes",
-    "git", "ci/cd", "linux", "agile", "scrum", "project management", "communication",
-    "leadership", "problem solving", "figma", "ui/ux", "photoshop", "seo",
-    "content writing", "digital marketing", "salesforce", "accounting", "excel vba",
+    "react", "reactjs", "angular", "vue", "vuejs", "node.js", "nodejs", "flask",
+    "django", "spring", "rest api", "pandas", "numpy", "scikit-learn", "tensorflow",
+    "pytorch", "machine learning", "deep learning", "nlp", "data analysis",
+    "data visualization", "power bi", "tableau", "excel", "statistics", "aws",
+    "azure", "gcp", "docker", "kubernetes", "git", "ci/cd", "linux", "agile",
+    "scrum", "project management", "communication", "leadership", "problem solving",
+    "figma", "ui/ux", "photoshop", "seo", "content writing", "digital marketing",
+    "salesforce", "accounting", "excel vba",
 ]
 
 # Common target roles and the skills most associated with each, used both for
@@ -49,7 +49,7 @@ def _find_skills(text_lower: str) -> list[str]:
 
 
 class ResumeScreeningModel:
-    def __init__(self): and 
+    def __init__(self):
         self.skills = SKILLS
         self.roles = ROLE_SKILLS
 
